@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Assistente local - NeuroLearn{% endblock %}
+
+{% block content %}
+<section class="nl-auth">
+    <div>
+        <div class="nl-eyebrow">IA local · Ollama</div>
+        <h1 class="mt-2">Assistente pedagogico.</h1>
+        <p class="nl-lead">Converse com a IA local configurada no servidor. As respostas sao apoio pedagogico, nao diagnostico.</p>
+        <div class="nl-card p-4">
+            <div class="nl-eyebrow">Privacidade</div>
+            <p class="mb-0">Por padrao, o NeuroLearn usa Ollama local e nao envia prompts para servicos externos.</p>
+        </div>
+    </div>
+    <div class="nl-card nl-card-feature">
+        <div id="chatLog" class="mb-3" style="min-height: 280px; max-height: 420px; overflow: auto;"></div>
+        <label class="form-label" for="mensagem">Mensagem</label>
+        <textarea class="form-control" id="mensagem" rows="4" placeholder="Pergunte sobre uma estrategia pedagogica..."></textarea>
+        <button class="btn btn-primary w-100 mt-3" type="button" onclick="enviarMensagemAssistente()">Enviar</button>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function enviarMensagemAssistente() {
+    const input = document.getElementById('mensagem');
+    const chat = document.getElementById('chatLog');
+    const mensagem = input.value.trim();
+    if (!mensagem) return;
+    chat.innerHTML += `<div class="nl-panel mb-2"><strong>Voce</strong><p class="mb-0">${mensagem}</p></div>`;
+    input.value = '';
+    const response = await fetch('/conversar-assistente', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mensagem, contexto: 'assistente_virtual' })
+    });
+    const data = await response.json();
+    chat.innerHTML += `<div class="nl-card p-3 mb-2"><strong>Assistente</strong><p class="mb-0">${data.resposta || data.erro}</p></div>`;
+}
+</script>
+{% endblock %}

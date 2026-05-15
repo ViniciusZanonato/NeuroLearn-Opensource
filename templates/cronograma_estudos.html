@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Cronograma - NeuroLearn{% endblock %}
+
+{% block content %}
+<section class="mb-5">
+    <div class="nl-eyebrow">Aluno · rotina</div>
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
+        <div>
+            <h1 class="mt-2">Cronograma de estudos.</h1>
+            <p class="nl-lead mb-0">Blocos de estudo planejados com pausas e horarios preferidos.</p>
+        </div>
+        <a class="btn btn-primary" href="{{ url_for('criar_cronograma') }}">Novo cronograma</a>
+    </div>
+</section>
+
+<section class="nl-card p-4">
+    {% if cronogramas %}
+        {% for cronograma in cronogramas %}
+        <div class="nl-data-row" style="grid-template-columns: 2fr 1fr 1fr 1fr;">
+            <div>
+                <strong>{{ cronograma.objetivo }}</strong>
+                <div class="text-muted small">{{ cronograma.data_inicio.strftime('%d/%m/%Y') }} a {{ cronograma.data_fim.strftime('%d/%m/%Y') }}</div>
+            </div>
+            <span class="nl-pill">{{ cronograma.horas_por_dia }} h/dia</span>
+            <span class="nl-eyebrow mb-0">{{ cronograma.horario_preferido }}</span>
+            <span class="nl-pill nl-pill-sage">ativo</span>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="nl-panel">
+            <h2>Nenhum cronograma ativo.</h2>
+            <p class="text-muted">Crie uma rotina de estudos adaptada ao seu momento.</p>
+            <a class="btn btn-primary" href="{{ url_for('criar_cronograma') }}">Criar cronograma</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

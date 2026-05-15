@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Progresso dos alunos - NeuroLearn{% endblock %}
+{% block page_class %}nl-wide{% endblock %}
+
+{% block content %}
+<section class="mb-5">
+    <div class="nl-eyebrow">Educador · progresso</div>
+    <h1 class="mt-2">Progresso dos alunos.</h1>
+    <p class="nl-lead">Acompanhe continuidade, trilhas e sinais de engajamento sem expor dados sensiveis desnecessarios.</p>
+</section>
+
+<section class="nl-card p-4">
+    <div class="nl-data-header" style="grid-template-columns: 2fr 1fr 1fr 1fr auto;">
+        <span>Aluno</span><span>Serie</span><span>Questionario</span><span>Perfil</span><span>Relatorio</span>
+    </div>
+    {% for aluno in alunos %}
+    <div class="nl-data-row" style="grid-template-columns: 2fr 1fr 1fr 1fr auto;">
+        <div>
+            <strong>{{ aluno.usuario.nome }}</strong>
+            <div class="text-muted small">{{ aluno.usuario.email }}</div>
+        </div>
+        <span>{{ aluno.serie_ano or '-' }}</span>
+        <span class="nl-pill {% if aluno.questionario_completo %}nl-pill-sage{% else %}nl-pill-ochre{% endif %}">{{ 'concluido' if aluno.questionario_completo else 'pendente' }}</span>
+        <span class="nl-pill {% if aluno.perfil_gerado %}nl-pill-sage{% else %}nl-pill-ochre{% endif %}">{{ 'gerado' if aluno.perfil_gerado else 'aguardando' }}</span>
+        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('relatorio_comportamento', aluno_id=aluno.id) }}">Comportamento</a>
+    </div>
+    {% else %}
+    <div class="nl-panel"><h2>Nenhum aluno cadastrado.</h2></div>
+    {% endfor %}
+</section>
+{% endblock %}

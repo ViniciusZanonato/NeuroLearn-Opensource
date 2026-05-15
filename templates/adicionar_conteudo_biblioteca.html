@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Adicionar conteudo - NeuroLearn{% endblock %}
+
+{% block content %}
+<section class="nl-auth">
+    <div>
+        <div class="nl-eyebrow">Biblioteca · novo conteudo</div>
+        <h1 class="mt-2">Catalogue um recurso.</h1>
+        <p class="nl-lead">Inclua materiais com informacoes de acessibilidade para facilitar recomendacoes.</p>
+    </div>
+    <form class="nl-card nl-card-feature" method="post">
+        <div class="mb-3"><label class="form-label">Titulo</label><input class="form-control" name="titulo" required></div>
+        <div class="mb-3"><label class="form-label">Descricao</label><textarea class="form-control" name="descricao" rows="3" required></textarea></div>
+        <div class="nl-grid nl-grid-2">
+            <div><label class="form-label">Tipo</label><input class="form-control" name="tipo" required></div>
+            <div><label class="form-label">Categoria</label><input class="form-control" name="categoria" required></div>
+            <div><label class="form-label">Nivel</label><input class="form-control" name="nivel_ensino"></div>
+            <div><label class="form-label">Duracao</label><input class="form-control" name="duracao" type="number"></div>
+        </div>
+        <div class="mt-3"><label class="form-label">URL</label><input class="form-control" name="url_conteudo" type="url"></div>
+        <input type="hidden" name="arquivo_conteudo" value="">
+        <input type="hidden" name="classificacao_etaria" value="livre">
+        <input type="hidden" name="tags" value="">
+        <div class="d-flex flex-wrap gap-3 mt-3">
+            <label><input type="checkbox" name="tem_legenda"> Legenda</label>
+            <label><input type="checkbox" name="tem_libras"> Libras</label>
+            <label><input type="checkbox" name="tem_transcricao" value="sim"> Transcricao</label>
+        </div>
+        <button class="btn btn-primary w-100 mt-4" type="submit">Salvar conteudo</button>
+    </form>
+</section>
+{% endblock %}

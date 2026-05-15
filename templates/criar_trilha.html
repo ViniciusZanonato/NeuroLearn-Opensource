@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Nova trilha - NeuroLearn{% endblock %}
+
+{% block content %}
+<section class="nl-auth">
+    <div>
+        <div class="nl-eyebrow">Educador · nova trilha</div>
+        <h1 class="mt-2">Desenhe uma rota de estudo.</h1>
+        <p class="nl-lead">Use trilhas para agrupar conteudos por area, nivel e perfil de aprendizagem alvo.</p>
+    </div>
+    <form class="nl-card nl-card-feature" method="post">
+        <div class="mb-3">
+            <label class="form-label" for="nome">Nome</label>
+            <input class="form-control" id="nome" name="nome" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="descricao">Descricao</label>
+            <textarea class="form-control" id="descricao" name="descricao" rows="4" required></textarea>
+        </div>
+        <div class="nl-grid nl-grid-2">
+            <div>
+                <label class="form-label" for="tipo_conteudo">Tipo</label>
+                <input class="form-control" id="tipo_conteudo" name="tipo_conteudo" placeholder="video, texto, pratica" required>
+            </div>
+            <div>
+                <label class="form-label" for="nivel_dificuldade">Nivel</label>
+                <select class="form-select" id="nivel_dificuldade" name="nivel_dificuldade" required>
+                    <option value="basico">Basico</option>
+                    <option value="intermediario">Intermediario</option>
+                    <option value="avancado">Avancado</option>
+                </select>
+            </div>
+            <div>
+                <label class="form-label" for="area_conhecimento">Area</label>
+                <input class="form-control" id="area_conhecimento" name="area_conhecimento" required>
+            </div>
+            <div>
+                <label class="form-label" for="duracao_estimada">Duracao estimada</label>
+                <input class="form-control" id="duracao_estimada" name="duracao_estimada" type="number" min="0" value="30">
+            </div>
+        </div>
+        <div class="mt-3">
+            <label class="form-label" for="perfil_alvo">Perfil alvo</label>
+            <input class="form-control" id="perfil_alvo" name="perfil_alvo" placeholder="visual, verbal, TDAH, TEA...">
+        </div>
+        <div class="mt-3">
+            <label class="form-label" for="url_conteudo">URL do conteudo</label>
+            <input class="form-control" id="url_conteudo" name="url_conteudo" type="url">
+        </div>
+        <input type="hidden" name="arquivo_conteudo" value="">
+        <button class="btn btn-primary w-100 mt-4" type="submit">Publicar trilha</button>
+    </form>
+</section>
+{% endblock %}

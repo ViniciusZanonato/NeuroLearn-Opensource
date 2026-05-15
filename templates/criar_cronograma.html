@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Novo cronograma - NeuroLearn{% endblock %}
+
+{% block content %}
+<section class="nl-auth">
+    <div>
+        <div class="nl-eyebrow">Aluno · planejamento</div>
+        <h1 class="mt-2">Monte uma rotina possivel.</h1>
+        <p class="nl-lead">O cronograma divide estudo em sessoes menores, com pausas e previsibilidade.</p>
+    </div>
+    <form class="nl-card nl-card-feature" method="post">
+        <div class="mb-3">
+            <label class="form-label" for="objetivo">Objetivo</label>
+            <input class="form-control" id="objetivo" name="objetivo" required>
+        </div>
+        <div class="nl-grid nl-grid-2">
+            <div>
+                <label class="form-label" for="data_inicio">Inicio</label>
+                <input class="form-control" id="data_inicio" name="data_inicio" type="date" required>
+            </div>
+            <div>
+                <label class="form-label" for="data_fim">Fim</label>
+                <input class="form-control" id="data_fim" name="data_fim" type="date" required>
+            </div>
+            <div>
+                <label class="form-label" for="horas_por_dia">Horas por dia</label>
+                <input class="form-control" id="horas_por_dia" name="horas_por_dia" type="number" min="0.5" step="0.5" value="1">
+            </div>
+            <div>
+                <label class="form-label" for="horario_preferido">Horario preferido</label>
+                <input class="form-control" id="horario_preferido" name="horario_preferido" placeholder="manha, tarde, noite">
+            </div>
+            <div>
+                <label class="form-label" for="tempo_sessao">Sessao (min)</label>
+                <input class="form-control" id="tempo_sessao" name="tempo_sessao" type="number" value="25">
+            </div>
+            <div>
+                <label class="form-label" for="tempo_pausa">Pausa (min)</label>
+                <input class="form-control" id="tempo_pausa" name="tempo_pausa" type="number" value="10">
+            </div>
+        </div>
+        <div class="mt-3">
+            <label class="form-label" for="dias_semana">Dias da semana</label>
+            <input class="form-control" id="dias_semana" name="dias_semana" value="1,2,3,4,5" required>
+            <small class="text-muted">Use 1=segunda ate 7=domingo, separados por virgula.</small>
+        </div>
+        <label class="d-flex align-items-center gap-2 mt-3">
+            <input type="checkbox" name="lembretes_ativos" checked>
+            <span>Lembretes ativos</span>
+        </label>
+        <button class="btn btn-primary w-100 mt-4" type="submit">Criar cronograma</button>
+    </form>
+</section>
+{% endblock %}

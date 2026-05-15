@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Executar trilha - NeuroLearn{% endblock %}
+
+{% block content %}
+<section class="mb-5">
+    <div class="nl-eyebrow">Trilha · aluno</div>
+    <h1 class="mt-2">{{ trilha.nome }}</h1>
+    <p class="nl-lead">{{ trilha.descricao }}</p>
+</section>
+
+<section class="nl-grid nl-grid-2">
+    <div class="nl-card nl-card-feature">
+        <div class="nl-eyebrow">Progresso</div>
+        <div class="d-flex align-items-baseline gap-2 mt-2">
+            <span class="nl-stat-num">{{ progresso.progresso|round(0) }}</span>
+            <span class="text-muted">%</span>
+        </div>
+        <div class="progress my-4"><div class="progress-bar" id="progressBar" style="width: {{ progresso.progresso }}%"></div></div>
+        {% if trilha.url_conteudo %}
+            <a class="btn btn-primary" href="{{ trilha.url_conteudo }}" target="_blank" rel="noopener">Abrir conteudo</a>
+        {% endif %}
+        <button class="btn btn-outline-primary ms-2" type="button" onclick="marcarProgresso(100)">Marcar como concluida</button>
+    </div>
+    <aside class="nl-card p-4">
+        <div class="nl-eyebrow">Detalhes</div>
+        <div class="nl-data-row" style="grid-template-columns: 1fr 1fr;"><span>Area</span><strong>{{ trilha.area_conhecimento }}</strong></div>
+        <div class="nl-data-row" style="grid-template-columns: 1fr 1fr;"><span>Nivel</span><strong>{{ trilha.nivel_dificuldade }}</strong></div>
+        <div class="nl-data-row" style="grid-template-columns: 1fr 1fr;"><span>Duracao</span><strong>{{ trilha.duracao_estimada }} min</strong></div>
+    </aside>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function marcarProgresso(valor) {
+    const response = await fetch('/atualizar-progresso-trilha', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ trilha_id: {{ trilha.id }}, progresso: valor, tempo_adicional: 0 })
+    });
+    if (response.ok) {
+        document.getElementById('progressBar').style.width = valor + '%';
+        showNotification('Progresso atualizado.', 'success');
+    }
+}
+</script>
+{% endblock %}

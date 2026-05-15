@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar trilhas - NeuroLearn{% endblock %}
+{% block page_class %}nl-wide{% endblock %}
+
+{% block content %}
+<section class="mb-5">
+    <div class="nl-eyebrow">Educador · trilhas</div>
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mt-2">
+        <div>
+            <h1 class="mb-2">Trilhas de aprendizagem.</h1>
+            <p class="nl-lead mb-0">Organize conteudos e rotas de estudo para perfis de aprendizagem diferentes.</p>
+        </div>
+        <a class="btn btn-primary" href="{{ url_for('criar_trilha') }}">Nova trilha</a>
+    </div>
+</section>
+
+<section class="nl-card p-4">
+    <div class="nl-data-header" style="grid-template-columns: 2fr 1fr 1fr 1fr auto;">
+        <span>Trilha</span><span>Area</span><span>Nivel</span><span>Status</span><span>Acoes</span>
+    </div>
+    {% if trilhas %}
+        {% for trilha in trilhas %}
+        <div class="nl-data-row" style="grid-template-columns: 2fr 1fr 1fr 1fr auto;">
+            <div>
+                <strong>{{ trilha.nome }}</strong>
+                <div class="text-muted small">{{ trilha.descricao[:100] }}{% if trilha.descricao|length > 100 %}...{% endif %}</div>
+            </div>
+            <span>{{ trilha.area_conhecimento }}</span>
+            <span class="nl-pill">{{ trilha.nivel_dificuldade }}</span>
+            <span class="nl-pill {% if trilha.ativo %}nl-pill-sage{% else %}nl-pill-ochre{% endif %}">{{ 'ativa' if trilha.ativo else 'inativa' }}</span>
+            <button class="btn btn-outline-primary btn-sm" type="button">Revisar</button>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="nl-panel">
+            <h3>Nenhuma trilha criada.</h3>
+            <p class="text-muted">Crie uma trilha para recomendar estudos por perfil.</p>
+            <a class="btn btn-primary" href="{{ url_for('criar_trilha') }}">Criar primeira trilha</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

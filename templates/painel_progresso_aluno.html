@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Progresso - NeuroLearn{% endblock %}
+
+{% block content %}
+<section class="mb-5">
+    <div class="nl-eyebrow">Aluno · progresso</div>
+    <h1 class="mt-2">Seu progresso.</h1>
+    <p class="nl-lead">Uma leitura simples das trilhas, sessoes e atividades recentes.</p>
+</section>
+
+<section class="nl-stat-row mb-4">
+    <div class="nl-stat"><div class="nl-stat-num" id="totalTrilhas">-</div><div class="nl-stat-label">trilhas</div></div>
+    <div class="nl-stat"><div class="nl-stat-num" id="trilhasConcluidas">-</div><div class="nl-stat-label">concluidas</div></div>
+    <div class="nl-stat"><div class="nl-stat-num" id="progressoMedio">-</div><div class="nl-stat-label">media</div></div>
+    <div class="nl-stat"><div class="nl-stat-num" id="atividadesRecentes">-</div><div class="nl-stat-label">7 dias</div></div>
+</section>
+
+<section class="nl-card nl-card-feature">
+    <div class="nl-eyebrow">Leitura</div>
+    <h2>Continue com blocos pequenos.</h2>
+    <p class="text-muted">O painel usa apenas registros de uso do sistema para mostrar ritmo e continuidade. Ele nao exibe hipoteses sensiveis.</p>
+    <a class="btn btn-primary" href="{{ url_for('trilhas_aprendizado') }}">Abrir trilhas</a>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+fetch('/dados-progresso-aluno/{{ aluno.id }}')
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById('totalTrilhas').textContent = data.total_trilhas ?? 0;
+    document.getElementById('trilhasConcluidas').textContent = data.trilhas_concluidas ?? 0;
+    document.getElementById('progressoMedio').textContent = (data.progresso_medio ?? 0) + '%';
+    document.getElementById('atividadesRecentes').textContent = data.atividades_recentes ?? 0;
+  });
+</script>
+{% endblock %}

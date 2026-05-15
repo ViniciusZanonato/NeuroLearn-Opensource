@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Biblioteca - NeuroLearn{% endblock %}
+{% block page_class %}nl-wide{% endblock %}
+
+{% block content %}
+<section class="mb-5">
+    <div class="nl-eyebrow">Conteudos acessiveis</div>
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
+        <div>
+            <h1 class="mt-2">Biblioteca.</h1>
+            <p class="nl-lead mb-0">Materiais de apoio com metadados de acessibilidade.</p>
+        </div>
+        {% if session.tipo == 'professor' %}
+        <a class="btn btn-primary" href="{{ url_for('adicionar_conteudo_biblioteca') }}">Adicionar conteudo</a>
+        {% endif %}
+    </div>
+</section>
+
+<form class="nl-searchbar mb-4" method="get">
+    <input name="tipo" value="{{ filtros.tipo }}" placeholder="Tipo">
+    <input name="categoria" value="{{ filtros.categoria }}" placeholder="Categoria">
+    <input name="nivel_ensino" value="{{ filtros.nivel }}" placeholder="Nivel">
+    <button class="btn btn-outline-primary btn-sm" type="submit">Filtrar</button>
+</form>
+
+<section class="nl-grid nl-grid-3">
+    {% for conteudo in conteudos %}
+    <article class="nl-card nl-card-feature">
+        <span class="nl-pill">{{ conteudo.tipo }}</span>
+        <h2 class="mt-3">{{ conteudo.titulo }}</h2>
+        <p class="text-muted">{{ conteudo.descricao }}</p>
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            {% if conteudo.tem_legenda %}<span class="nl-pill nl-pill-sage">legenda</span>{% endif %}
+            {% if conteudo.tem_libras %}<span class="nl-pill nl-pill-sage">libras</span>{% endif %}
+            {% if conteudo.tem_transcricao %}<span class="nl-pill nl-pill-sage">transcricao</span>{% endif %}
+        </div>
+        {% if conteudo.url_conteudo %}
+        <a class="btn btn-outline-primary btn-sm" href="{{ conteudo.url_conteudo }}" target="_blank" rel="noopener">Abrir</a>
+        {% endif %}
+    </article>
+    {% else %}
+    <div class="nl-panel"><h2>Nenhum conteudo encontrado.</h2></div>
+    {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Comportamento - NeuroLearn{% endblock %}
+{% block page_class %}nl-wide{% endblock %}
+
+{% block content %}
+<section class="mb-5">
+    <div class="nl-eyebrow">Relatorio comportamental · {{ analise.periodo_analise }}</div>
+    <h1 class="mt-2">{{ aluno.usuario.nome }}</h1>
+    <p class="nl-lead">Registro de uso da plataforma para apoiar acompanhamento pedagogico. Nao e laudo clinico.</p>
+</section>
+
+<section class="nl-stat-row mb-4">
+    <div class="nl-stat"><div class="nl-stat-num">{{ analise.total_acoes }}</div><div class="nl-stat-label">acoes</div></div>
+    <div class="nl-stat"><div class="nl-stat-num">{{ analise.total_tempo_minutos }}</div><div class="nl-stat-label">minutos</div></div>
+    <div class="nl-stat"><div class="nl-stat-num">{{ analise.acoes_por_tipo|length }}</div><div class="nl-stat-label">tipos</div></div>
+    <div class="nl-stat"><div class="nl-stat-num">{{ analise.erros_por_contexto|length }}</div><div class="nl-stat-label">contextos erro</div></div>
+</section>
+
+<section class="nl-grid nl-grid-2">
+    <div class="nl-card p-4">
+        <div class="nl-eyebrow">Acoes por tipo</div>
+        {% for tipo, total in analise.acoes_por_tipo.items() %}
+        <div class="nl-data-row" style="grid-template-columns: 1fr auto;">
+            <span>{{ tipo }}</span><strong>{{ total }}</strong>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">Sem acoes registradas.</p>
+        {% endfor %}
+    </div>
+    <div class="nl-card p-4">
+        <div class="nl-eyebrow">Ultimas acoes</div>
+        {% for item in monitoramentos %}
+        <div class="nl-data-row" style="grid-template-columns: 1fr 1fr auto;">
+            <span>{{ item.tipo_acao }}</span>
+            <span class="text-muted">{{ item.contexto }}</span>
+            <span class="nl-eyebrow mb-0">{{ item.data_acao.strftime('%d/%m') }}</span>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">Sem historico recente.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

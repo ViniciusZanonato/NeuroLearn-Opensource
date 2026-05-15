@@ -1,0 +1,81 @@
+# Arquivos de ambiente
+.env
+.env.local
+.env.production
+
+# Referencias de design locais
+Design/
+
+# Banco de dados local
+*.db
+*.sqlite3
+sistema_educacional.db
+instance/
+
+# Backups
+backup_*.db
+
+# Chaves e segredos
+*.key
+*.pem
+*.crt
+secrets.json
+config_prod.py
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.tox/
+.coverage
+.pytest_cache/
+
+# Uploads
+static/uploads/
+temp/
+
+# Logs
+*.log
+logs/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+
+# Relatórios de segurança
+security_report.json
+security_report_*.json
+
+# Arquivos temporários
+temp_*
+*.tmp
+
+# Relatórios e análises temporárias
+perfis_sistema_*.json
+relatorio_*.json
+relatorio_*.txt
+
+# Backups de segurança
+backup_security_*
+
+# Scripts de verificação temporários
+security_check.py
+simple_security_check.py
+fix_security.py
+

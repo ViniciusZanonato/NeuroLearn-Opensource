@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Registro - EduIA{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card card-custom">
+            <div class="card-header text-center bg-primary text-white">
+                <h3><i class="fas fa-user-plus me-2"></i>Registro no Sistema</h3>
+                <p class="mb-0">Crie sua conta para acessar a plataforma educacional com IA</p>
+            </div>
+            <div class="card-body">
+                <form id="registroForm">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="nome" class="form-label">Nome Completo</label>
+                            <input type="text" class="form-control" id="nome" name="nome" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="senha" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="senha" name="senha" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tipo" class="form-label">Tipo de Usuário</label>
+                            <select class="form-select" id="tipo" name="tipo" required>
+                                <option value="">Selecione...</option>
+                                <option value="aluno">Aluno</option>
+                                <option value="professor">Professor</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Campos específicos para aluno -->
+                    <div id="camposAluno" style="display: none;">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Informações do Aluno</strong><br>
+                            Essas informações ajudam nossa IA a personalizar o aprendizado.
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="email_escola" class="form-label">E-mail da Escola ou ID Escolar</label>
+                                <input type="text" class="form-control" id="email_escola" name="email_escola" 
+                                       placeholder="Ex: escola@exemplo.com ou ID123456">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="serie_ano" class="form-label">Série/Ano *</label>
+                                <select class="form-select" id="serie_ano" name="serie_ano" required>
+                                    <option value="">Selecione sua série/ano</option>
+                                    <option value="1º Ano - Médio">1º Ano - Ensino Médio</option>
+                                    <option value="2º Ano - Médio">2º Ano - Ensino Médio</option>
+                                    <option value="3º Ano - Médio">3º Ano - Ensino Médio</option>
+                                    <option value="Cursinho/Pré-vestibular">Cursinho/Pré-vestibular</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="idade" class="form-label">Idade *</label>
+                                <select class="form-select" id="idade" name="idade" required>
+                                    <option value="">Selecione sua idade</option>
+                                    <option value="14">14 anos</option>
+                                    <option value="15">15 anos</option>
+                                    <option value="16">16 anos</option>
+                                    <option value="17">17 anos</option>
+                                    <option value="18">18 anos</option>
+                                    <option value="19">19 anos</option>
+                                    <option value="20">20 anos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="professor_responsavel" class="form-label">Nome do Professor Responsável *</label>
+                                <input type="text" class="form-control" id="professor_responsavel" name="professor_responsavel" 
+                                       placeholder="Nome completo do professor" required>
+                            </div>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-brain me-2"></i>
+                            <strong>NeuroLearn - Forma Mentis:</strong><br>
+                            Após o cadastro, você será direcionado para o Questionário NeuroLearn 
+                            com 67 questões que nos ajudarão a criar seu perfil de aprendizagem personalizado 
+                            baseado na Metodologia Ontopsicológica.
+                        </div>
+                    </div>
+                    
+                    <!-- Campos específicos para professor -->
+                    <div id="camposProfessor" style="display: none;">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-chalkboard-teacher me-2"></i>
+                            <strong>Informações do Professor</strong><br>
+                            Seus dados ajudam a personalizar as ferramentas pedagógicas.
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="disciplina" class="form-label">Disciplina Principal</label>
+                                <input type="text" class="form-control" id="disciplina" name="disciplina" 
+                                       placeholder="Ex: Matemática, Português, História...">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="formacao" class="form-label">Formação</label>
+                                <input type="text" class="form-control" id="formacao" name="formacao" 
+                                       placeholder="Ex: Licenciatura em Matemática">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-custom btn-lg text-white">
+                            <i class="fas fa-user-check me-2"></i>Criar Conta
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p class="mb-0">Já tem uma conta? <a href="{{ url_for('login') }}">Faça login aqui</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-light border">
+            <h5><i class="fas fa-shield-alt text-success me-2"></i>Privacidade e Segurança</h5>
+            <p class="mb-0">
+                Todos os dados são protegidos e utilizados exclusivamente para fins educacionais. 
+                Nossa IA segue protocolos éticos baseados na Ontopsicologia para análise responsável 
+                do desenvolvimento cognitivo.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('tipo').addEventListener('change', function() {
+    const tipo = this.value;
+    const camposAluno = document.getElementById('camposAluno');
+    const camposProfessor = document.getElementById('camposProfessor');
+    
+    if (tipo === 'aluno') {
+        camposAluno.style.display = 'block';
+        camposProfessor.style.display = 'none';
+    } else if (tipo === 'professor') {
+        camposAluno.style.display = 'none';
+        camposProfessor.style.display = 'block';
+    } else {
+        camposAluno.style.display = 'none';
+        camposProfessor.style.display = 'none';
+    }
+});
+
+document.getElementById('registroForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    try {
+        const response = await fetch('{{ url_for("registro") }}', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert('Conta criada com sucesso! Redirecionando para o dashboard...');
+            // Redireciona baseado no tipo de usuário
+            const tipoUsuario = formData.get('tipo');
+            if (tipoUsuario === 'professor') {
+                window.location.href = '{{ url_for("dashboard_professor") }}';
+            } else {
+                window.location.href = '{{ url_for("dashboard_aluno") }}';
+            }
+        } else {
+            alert('Erro: ' + result.erro);
+        }
+    } catch (error) {
+        alert('Erro na comunicação com o servidor');
+    }
+});
+</script>
+{% endblock %}
+

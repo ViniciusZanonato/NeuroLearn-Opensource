@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Respostas do Questionário - {{ aluno.usuario.nome }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2><i class="fas fa-list-ul"></i> Respostas do Questionário NeuroLearn</h2>
+                            <h4>{{ aluno.usuario.nome }}</h4>
+                            <p class="mb-0">Visualização das 67 respostas do questionário Forma Mentis</p>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <span class="badge badge-light badge-lg">
+                                <i class="fas fa-check-circle"></i> {{ respostas|length }} Respostas
+                            </span><br>
+                            <small>Questionário finalizado em {{ aluno.questionario_completo and 'Completo' or 'Incompleto' }}</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Resumo por Bloco -->
+                    <div class="row mb-4">
+                        {% for bloco_num in range(1, 8) %}
+                        <div class="col-md-3 mb-2">
+                            <div class="card bg-light">
+                                <div class="card-body text-center py-2">
+                                    <h6 class="mb-1">Bloco {{ bloco_num }}</h6>
+                                    <small class="text-muted">{{ blocos_info[bloco_num].titulo }}</small><br>
+                                    <span class="badge badge-primary">{{ respostas_por_bloco[bloco_num]|length }} respostas</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Respostas por Bloco -->
+                    {% for bloco_num in range(1, 8) %}
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5><i class="fas fa-brain"></i> Bloco {{ bloco_num }}: {{ blocos_info[bloco_num].titulo }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% for questao in blocos_info[bloco_num].questoes %}
+                                {% set loop_index = loop.index %}
+                                {% set questao_id = (bloco_num - 1) * 10 + loop_index %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-secondary">
+                                        <div class="card-body py-2">
+                                            <h6 class="card-title text-primary">Questão {{ questao_id }}</h6>
+                                            <p class="card-text small">{{ questao }}</p>
+                                            
+                                            {% set resposta_valor = respostas_dict.get(questao_id, 0) %}
+                                            
+                                            <div class="text-center">
+                                                <span class="badge 
+                                                    {% if resposta_valor == 1 %}badge-danger
+                                                    {% elif resposta_valor == 2 %}badge-warning
+                                                    {% elif resposta_valor == 3 %}badge-secondary
+                                                    {% elif resposta_valor == 4 %}badge-info
+                                                    {% elif resposta_valor == 5 %}badge-success
+                                                    {% else %}badge-dark{% endif %} badge-lg">
+                                                    {% if resposta_valor > 0 %}
+                                                        Resposta: {{ resposta_valor }}
+                                                        {% if resposta_valor == 1 %}(Discordo Totalmente)
+                                                        {% elif resposta_valor == 2 %}(Discordo)
+                                                        {% elif resposta_valor == 3 %}(Neutro)
+                                                        {% elif resposta_valor == 4 %}(Concordo)
+                                                        {% elif resposta_valor == 5 %}(Concordo Totalmente){% endif %}
+                                                    {% else %}
+                                                        Não Respondida
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Estatísticas -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-dark text-white">
+                            <h5><i class="fas fa-chart-bar"></i> Estatísticas das Respostas</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-2">
+                                    <div class="card bg-danger text-white">
+                                        <div class="card-body py-2">
+                                            <h4>{{ estatisticas.get(1, 0) }}</h4>
+                                            <small>Discordo Totalmente</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="card bg-warning text-dark">
+                                        <div class="card-body py-2">
+                                            <h4>{{ estatisticas.get(2, 0) }}</h4>
+                                            <small>Discordo</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="card bg-secondary text-white">
+                                        <div class="card-body py-2">
+                                            <h4>{{ estatisticas.get(3, 0) }}</h4>
+                                            <small>Neutro</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="card bg-info text-white">
+                                        <div class="card-body py-2">
+                                            <h4>{{ estatisticas.get(4, 0) }}</h4>
+                                            <small>Concordo</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="card bg-success text-white">
+                                        <div class="card-body py-2">
+                                            <h4>{{ estatisticas.get(5, 0) }}</h4>
+                                            <small>Concordo Totalmente</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="card bg-primary text-white">
+                                        <div class="card-body py-2">
+                                            <h4>{{ respostas|length }}</h4>
+                                            <small>Total de Respostas</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <a href="{{ url_for('perfil_aluno_simples', aluno_id=aluno.id) }}" class="btn btn-outline-primary btn-block">
+                                <i class="fas fa-arrow-left"></i> Voltar ao Perfil
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ url_for('visualizar_perfil', aluno_id=aluno.id) }}" class="btn btn-success btn-block">
+                                <i class="fas fa-file-alt"></i> Ver Análise Completa
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-info btn-block" onclick="window.print()">
+                                <i class="fas fa-print"></i> Imprimir Respostas
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.badge-lg {
+    font-size: 0.9em;
+    padding: 0.5em 0.75em;
+}
+
+@media print {
+    .btn, .card-header, nav, footer {
+        display: none !important;
+    }
+    .card {
+        border: none !important;
+        box-shadow: none !important;
+    }
+}
+</style>
+{% endblock %}
+

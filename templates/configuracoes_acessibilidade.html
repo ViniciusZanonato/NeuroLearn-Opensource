@@ -1,0 +1,629 @@
+{% extends "base.html" %}
+
+{% block title %}Configurações de Acessibilidade - NeuroLearn{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h3><i class="fas fa-universal-access"></i> Configurações de Acessibilidade</h3>
+                    <p class="mb-0">Personalize sua experiência para melhor acessibilidade</p>
+                </div>
+                <div class="card-body">
+                    <form id="form-acessibilidade">
+                        <!-- Seção Visual -->
+                        <div class="mb-4">
+                            <h5><i class="fas fa-eye"></i> Configurações Visuais</h5>
+                            <hr>
+                            
+                            <!-- Modo Escuro -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="modo_escuro" 
+                                               {{ 'checked' if config.modo_escuro }}>
+                                        <label class="form-check-label" for="modo_escuro">
+                                            <i class="fas fa-moon"></i> Modo Escuro
+                                        </label>
+                                    </div>
+                                    <small class="text-muted">Ativa tema escuro para reduzir o cansaço visual</small>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="alto_contraste" 
+                                               {{ 'checked' if config.alto_contraste }}>
+                                        <label class="form-check-label" for="alto_contraste">
+                                            <i class="fas fa-adjust"></i> Alto Contraste
+                                        </label>
+                                    </div>
+                                    <small class="text-muted">Aumenta o contraste entre texto e fundo</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Tamanho da Fonte -->
+                            <div class="mb-3">
+                                <label for="tamanho_fonte" class="form-label">
+                                    <i class="fas fa-text-height"></i> Tamanho da Fonte
+                                </label>
+                                <select class="form-select" id="tamanho_fonte">
+                                    <option value="pequeno" {{ 'selected' if config.tamanho_fonte == 'pequeno' }}>Pequeno</option>
+                                    <option value="normal" {{ 'selected' if config.tamanho_fonte == 'normal' }}>Normal</option>
+                                    <option value="grande" {{ 'selected' if config.tamanho_fonte == 'grande' }}>Grande</option>
+                                    <option value="muito-grande" {{ 'selected' if config.tamanho_fonte == 'muito-grande' }}>Muito Grande</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Redução de Animações -->
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="reducao_animacoes" 
+                                       {{ 'checked' if config.reducao_animacoes }}>
+                                <label class="form-check-label" for="reducao_animacoes">
+                                    <i class="fas fa-pause"></i> Reduzir Animações
+                                </label>
+                                <br><small class="text-muted">Reduz movimentos e transições que podem causar desconforto</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção Auditiva -->
+                        <div class="mb-4">
+                            <h5><i class="fas fa-volume-up"></i> Configurações Auditivas</h5>
+                            <hr>
+                            
+                            <!-- Áudio de Leitura -->
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="audio_leitura" 
+                                       {{ 'checked' if config.audio_leitura }}>
+                                <label class="form-check-label" for="audio_leitura">
+                                    <i class="fas fa-volume-up"></i> Áudio de Leitura
+                                </label>
+                                <br><small class="text-muted">Ativa a leitura automática de textos</small>
+                            </div>
+                            
+                            <!-- Velocidade do Áudio -->
+                            <div class="mb-3">
+                                <label for="velocidade_audio" class="form-label">
+                                    <i class="fas fa-tachometer-alt"></i> Velocidade do Áudio
+                                </label>
+                                <input type="range" class="form-range" id="velocidade_audio" 
+                                       min="0.5" max="2.0" step="0.1" 
+                                       value="{{ config.velocidade_audio or 1.0 }}">
+                                <div class="d-flex justify-content-between">
+                                    <small>0.5x (Lento)</small>
+                                    <span id="velocidade_display">{{ config.velocidade_audio or 1.0 }}x</span>
+                                    <small>2.0x (Rápido)</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Teste de Áudio -->
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-outline-primary" id="btn-teste-audio">
+                                    <i class="fas fa-play"></i> Testar Áudio de Leitura
+                                </button>
+                                <p id="texto-teste" class="mt-2 d-none">
+                                    Este é um exemplo de como funcionará a leitura automática de textos.
+                                    A velocidade pode ser ajustada conforme sua preferência.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção de Navegação -->
+                        <div class="mb-4">
+                            <h5><i class="fas fa-mouse-pointer"></i> Navegação</h5>
+                            <hr>
+                            
+                            <!-- Navegação Simplificada -->
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="navegacao_simplificada" 
+                                       {{ 'checked' if config.navegacao_simplificada }}>
+                                <label class="form-check-label" for="navegacao_simplificada">
+                                    <i class="fas fa-hand-pointer"></i> Navegação Simplificada
+                                </label>
+                                <br><small class="text-muted">Simplifica a interface, destacando elementos essenciais</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção de Notificações -->
+                        <div class="mb-4">
+                            <h5><i class="fas fa-bell"></i> Notificações</h5>
+                            <hr>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="notificacoes_visuais" 
+                                               {{ 'checked' if config.notificacoes_visuais }}>
+                                        <label class="form-check-label" for="notificacoes_visuais">
+                                            <i class="fas fa-eye"></i> Notificações Visuais
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="notificacoes_sonoras" 
+                                               {{ 'checked' if config.notificacoes_sonoras }}>
+                                        <label class="form-check-label" for="notificacoes_sonoras">
+                                            <i class="fas fa-volume-up"></i> Notificações Sonoras
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção de Cores Personalizadas -->
+                        <div class="mb-4">
+                            <h5><i class="fas fa-palette"></i> Cores Personalizadas</h5>
+                            <hr>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="cor_primaria" class="form-label">Cor Principal</label>
+                                    <input type="color" class="form-control form-control-color" 
+                                           id="cor_primaria" value="#007bff" title="Escolha a cor principal">
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label for="cor_secundaria" class="form-label">Cor Secundária</label>
+                                    <input type="color" class="form-control form-control-color" 
+                                           id="cor_secundaria" value="#6c757d" title="Escolha a cor secundária">
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label for="cor_fundo" class="form-label">Cor de Fundo</label>
+                                    <input type="color" class="form-control form-control-color" 
+                                           id="cor_fundo" value="#ffffff" title="Escolha a cor de fundo">
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <button type="button" class="btn btn-outline-secondary" id="btn-resetar-cores">
+                                    <i class="fas fa-undo"></i> Restaurar Cores Padrão
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" id="btn-preview-cores">
+                                    <i class="fas fa-eye"></i> Visualizar Mudanças
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Botões de Ação -->
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save"></i> Salvar Configurações
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="btn-resetar">
+                                    <i class="fas fa-undo"></i> Restaurar Padrões
+                                </button>
+                            </div>
+                            
+                            <div>
+                                <button type="button" class="btn btn-info" id="btn-ajuda">
+                                    <i class="fas fa-question-circle"></i> Ajuda
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Card de Ajuda -->
+            <div class="card mt-4 d-none" id="card-ajuda">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-info-circle"></i> Guia de Acessibilidade</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>💡 Dicas para Melhor Experiência:</h6>
+                            <ul>
+                                <li><strong>Modo Escuro:</strong> Ideal para estudos noturnos ou sensibilidade à luz</li>
+                                <li><strong>Alto Contraste:</strong> Ajuda pessoas com dificuldades visuais</li>
+                                <li><strong>Áudio de Leitura:</strong> Beneficia pessoas com dislexia ou deficiência visual</li>
+                                <li><strong>Navegação Simplificada:</strong> Reduz distrações e facilita o foco</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6>🎯 Perfis Recomendados:</h6>
+                            <div class="mb-2">
+                                <button class="btn btn-outline-primary btn-sm" onclick="aplicarPerfilDislexia()">
+                                    Perfil para Dislexia
+                                </button>
+                            </div>
+                            <div class="mb-2">
+                                <button class="btn btn-outline-success btn-sm" onclick="aplicarPerfilTDAH()">
+                                    Perfil para TDAH
+                                </button>
+                            </div>
+                            <div class="mb-2">
+                                <button class="btn btn-outline-warning btn-sm" onclick="aplicarPerfilAutismo()">
+                                    Perfil para Autismo
+                                </button>
+                            </div>
+                            <div class="mb-2">
+                                <button class="btn btn-outline-info btn-sm" onclick="aplicarPerfilDeficienciaVisual()">
+                                    Perfil para Deficiência Visual
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Sucesso -->
+<div class="modal fade" id="modalSucesso" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="fas fa-check"></i> Configurações Salvas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Suas configurações de acessibilidade foram salvas com sucesso!</p>
+                <p>As mudanças serão aplicadas em todas as páginas do sistema.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Estilos para alto contraste */
+.alto-contraste {
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+.alto-contraste .card {
+    background: #1a1a1a !important;
+    border: 2px solid #ffffff !important;
+}
+
+.alto-contraste .btn-primary {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #ffffff !important;
+}
+
+/* Estilos para modo escuro */
+.modo-escuro {
+    background: #2d2d2d !important;
+    color: #e9ecef !important;
+}
+
+.modo-escuro .card {
+    background: #3d3d3d !important;
+    border-color: #555 !important;
+}
+
+.modo-escuro .card-header {
+    background: #495057 !important;
+}
+
+/* Estilos para diferentes tamanhos de fonte */
+.fonte-pequeno { font-size: 0.8rem !important; }
+.fonte-normal { font-size: 1rem !important; }
+.fonte-grande { font-size: 1.2rem !important; }
+.fonte-muito-grande { font-size: 1.5rem !important; }
+
+/* Navegação simplificada */
+.navegacao-simplificada .navbar-nav .nav-item:not(:first-child):not(:last-child) {
+    display: none !important;
+}
+
+.navegacao-simplificada .btn:not(.btn-primary):not(.btn-success):not(.btn-danger) {
+    opacity: 0.5;
+}
+
+/* Redução de animações */
+.reducao-animacoes * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+}
+
+/* Preview de cores */
+.preview-cores {
+    border: 2px dashed #007bff;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+</style>
+
+<script>
+// Variáveis globais
+let configAtual = {};
+let synth = window.speechSynthesis;
+
+// Carregar configurações ao iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    carregarConfiguracoes();
+    configurarEventListeners();
+    aplicarConfiguracoesVisuais();
+});
+
+function carregarConfiguracoes() {
+    fetch('/obter-configuracoes-acessibilidade')
+        .then(response => response.json())
+        .then(config => {
+            configAtual = config;
+            preencherFormulario(config);
+            aplicarConfiguracoesVisuais();
+        })
+        .catch(error => {
+            console.error('Erro ao carregar configurações:', error);
+        });
+}
+
+function preencherFormulario(config) {
+    // Checkboxes
+    document.getElementById('modo_escuro').checked = config.modo_escuro || false;
+    document.getElementById('alto_contraste').checked = config.alto_contraste || false;
+    document.getElementById('audio_leitura').checked = config.audio_leitura || false;
+    document.getElementById('navegacao_simplificada').checked = config.navegacao_simplificada || false;
+    document.getElementById('reducao_animacoes').checked = config.reducao_animacoes || false;
+    document.getElementById('notificacoes_visuais').checked = config.notificacoes_visuais !== false;
+    document.getElementById('notificacoes_sonoras').checked = config.notificacoes_sonoras !== false;
+    
+    // Selects e ranges
+    document.getElementById('tamanho_fonte').value = config.tamanho_fonte || 'normal';
+    document.getElementById('velocidade_audio').value = config.velocidade_audio || 1.0;
+    
+    // Cores personalizadas
+    if (config.cores_personalizadas) {
+        document.getElementById('cor_primaria').value = config.cores_personalizadas.primaria || '#007bff';
+        document.getElementById('cor_secundaria').value = config.cores_personalizadas.secundaria || '#6c757d';
+        document.getElementById('cor_fundo').value = config.cores_personalizadas.fundo || '#ffffff';
+    }
+    
+    atualizarVelocidadeDisplay();
+}
+
+function configurarEventListeners() {
+    // Slider de velocidade
+    document.getElementById('velocidade_audio').addEventListener('input', atualizarVelocidadeDisplay);
+    
+    // Teste de áudio
+    document.getElementById('btn-teste-audio').addEventListener('click', testarAudio);
+    
+    // Botões de ação
+    document.getElementById('btn-ajuda').addEventListener('click', toggleAjuda);
+    document.getElementById('btn-resetar').addEventListener('click', resetarConfiguracoes);
+    document.getElementById('btn-resetar-cores').addEventListener('click', resetarCores);
+    document.getElementById('btn-preview-cores').addEventListener('click', previewCores);
+    
+    // Submit do formulário
+    document.getElementById('form-acessibilidade').addEventListener('submit', salvarConfiguracoes);
+    
+    // Aplicar mudanças em tempo real
+    document.querySelectorAll('input, select').forEach(input => {
+        input.addEventListener('change', aplicarConfiguracoesVisuais);
+    });
+}
+
+function atualizarVelocidadeDisplay() {
+    const velocidade = document.getElementById('velocidade_audio').value;
+    document.getElementById('velocidade_display').textContent = velocidade + 'x';
+}
+
+function testarAudio() {
+    const textoTeste = document.getElementById('texto-teste');
+    textoTeste.classList.remove('d-none');
+    
+    if (synth.speaking) {
+        synth.cancel();
+        return;
+    }
+    
+    const utterance = new SpeechSynthesisUtterance(textoTeste.textContent);
+    utterance.rate = parseFloat(document.getElementById('velocidade_audio').value);
+    utterance.pitch = 1;
+    utterance.volume = 1;
+    
+    // Tentar usar voz em português
+    const voices = synth.getVoices();
+    const vozesPt = voices.filter(voice => voice.lang.includes('pt'));
+    if (vozesPt.length > 0) {
+        utterance.voice = vozesPt[0];
+    }
+    
+    utterance.onstart = () => {
+        document.getElementById('btn-teste-audio').innerHTML = '<i class="fas fa-stop"></i> Parar Teste';
+    };
+    
+    utterance.onend = () => {
+        document.getElementById('btn-teste-audio').innerHTML = '<i class="fas fa-play"></i> Testar Áudio de Leitura';
+    };
+    
+    synth.speak(utterance);
+}
+
+function aplicarConfiguracoesVisuais() {
+    const body = document.body;
+    
+    // Remover classes anteriores
+    body.classList.remove('modo-escuro', 'alto-contraste', 'navegacao-simplificada', 'reducao-animacoes');
+    body.classList.remove('fonte-pequeno', 'fonte-normal', 'fonte-grande', 'fonte-muito-grande');
+    
+    // Aplicar modo escuro
+    if (document.getElementById('modo_escuro').checked) {
+        body.classList.add('modo-escuro');
+    }
+    
+    // Aplicar alto contraste
+    if (document.getElementById('alto_contraste').checked) {
+        body.classList.add('alto-contraste');
+    }
+    
+    // Aplicar tamanho da fonte
+    const tamanhoFonte = document.getElementById('tamanho_fonte').value;
+    body.classList.add('fonte-' + tamanhoFonte);
+    
+    // Aplicar navegação simplificada
+    if (document.getElementById('navegacao_simplificada').checked) {
+        body.classList.add('navegacao-simplificada');
+    }
+    
+    // Aplicar redução de animações
+    if (document.getElementById('reducao_animacoes').checked) {
+        body.classList.add('reducao-animacoes');
+    }
+}
+
+function salvarConfiguracoes(event) {
+    event.preventDefault();
+    
+    const configuracoes = {
+        modo_escuro: document.getElementById('modo_escuro').checked,
+        alto_contraste: document.getElementById('alto_contraste').checked,
+        tamanho_fonte: document.getElementById('tamanho_fonte').value,
+        audio_leitura: document.getElementById('audio_leitura').checked,
+        velocidade_audio: parseFloat(document.getElementById('velocidade_audio').value),
+        navegacao_simplificada: document.getElementById('navegacao_simplificada').checked,
+        reducao_animacoes: document.getElementById('reducao_animacoes').checked,
+        notificacoes_visuais: document.getElementById('notificacoes_visuais').checked,
+        notificacoes_sonoras: document.getElementById('notificacoes_sonoras').checked,
+        cores_personalizadas: {
+            primaria: document.getElementById('cor_primaria').value,
+            secundaria: document.getElementById('cor_secundaria').value,
+            fundo: document.getElementById('cor_fundo').value
+        }
+    };
+    
+    fetch('/salvar-configuracoes-acessibilidade', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(configuracoes)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.sucesso) {
+            // Mostrar modal de sucesso
+            const modal = new bootstrap.Modal(document.getElementById('modalSucesso'));
+            modal.show();
+            
+            // Salvar no localStorage para persistir entre páginas
+            localStorage.setItem('configuracoes_acessibilidade', JSON.stringify(configuracoes));
+        } else {
+            alert('Erro ao salvar configurações: ' + data.erro);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao salvar configurações');
+    });
+}
+
+function resetarConfiguracoes() {
+    if (confirm('Tem certeza que deseja restaurar todas as configurações padrão?')) {
+        document.getElementById('form-acessibilidade').reset();
+        aplicarConfiguracoesVisuais();
+    }
+}
+
+function resetarCores() {
+    document.getElementById('cor_primaria').value = '#007bff';
+    document.getElementById('cor_secundaria').value = '#6c757d';
+    document.getElementById('cor_fundo').value = '#ffffff';
+}
+
+function previewCores() {
+    const primaria = document.getElementById('cor_primaria').value;
+    const secundaria = document.getElementById('cor_secundaria').value;
+    const fundo = document.getElementById('cor_fundo').value;
+    
+    // Criar preview temporário
+    const preview = document.createElement('div');
+    preview.className = 'preview-cores';
+    preview.innerHTML = `
+        <h6>Preview das Cores Personalizadas:</h6>
+        <div style="background: ${fundo}; color: ${primaria}; padding: 10px; border: 1px solid ${secundaria};">
+            <span style="color: ${primaria};">Texto Principal</span> - 
+            <span style="color: ${secundaria};">Texto Secundário</span>
+        </div>
+    `;
+    
+    // Remover preview anterior
+    const previewAnterior = document.querySelector('.preview-cores');
+    if (previewAnterior) {
+        previewAnterior.remove();
+    }
+    
+    // Inserir novo preview
+    document.getElementById('btn-preview-cores').parentNode.appendChild(preview);
+    
+    // Remover preview após 5 segundos
+    setTimeout(() => {
+        if (preview.parentNode) {
+            preview.remove();
+        }
+    }, 5000);
+}
+
+function toggleAjuda() {
+    const cardAjuda = document.getElementById('card-ajuda');
+    cardAjuda.classList.toggle('d-none');
+}
+
+// Perfis pré-definidos
+function aplicarPerfilDislexia() {
+    document.getElementById('audio_leitura').checked = true;
+    document.getElementById('velocidade_audio').value = 0.8;
+    document.getElementById('tamanho_fonte').value = 'grande';
+    document.getElementById('reducao_animacoes').checked = true;
+    aplicarConfiguracoesVisuais();
+    atualizarVelocidadeDisplay();
+}
+
+function aplicarPerfilTDAH() {
+    document.getElementById('navegacao_simplificada').checked = true;
+    document.getElementById('reducao_animacoes').checked = true;
+    document.getElementById('notificacoes_sonoras').checked = false;
+    aplicarConfiguracoesVisuais();
+}
+
+function aplicarPerfilAutismo() {
+    document.getElementById('navegacao_simplificada').checked = true;
+    document.getElementById('reducao_animacoes').checked = true;
+    document.getElementById('notificacoes_visuais').checked = true;
+    document.getElementById('notificacoes_sonoras').checked = false;
+    aplicarConfiguracoesVisuais();
+}
+
+function aplicarPerfilDeficienciaVisual() {
+    document.getElementById('audio_leitura').checked = true;
+    document.getElementById('alto_contraste').checked = true;
+    document.getElementById('tamanho_fonte').value = 'muito-grande';
+    document.getElementById('velocidade_audio').value = 1.2;
+    aplicarConfiguracoesVisuais();
+    atualizarVelocidadeDisplay();
+}
+
+// Aplicar configurações salvas ao carregar a página
+window.addEventListener('load', function() {
+    const configSalva = localStorage.getItem('configuracoes_acessibilidade');
+    if (configSalva) {
+        try {
+            const config = JSON.parse(configSalva);
+            preencherFormulario(config);
+            aplicarConfiguracoesVisuais();
+        } catch (e) {
+            console.error('Erro ao carregar configurações do localStorage:', e);
+        }
+    }
+});
+</script>
+{% endblock %}
+

@@ -1,0 +1,588 @@
+{% extends "base.html" %}
+
+{% block title %}Teste de Perfil Cognitivo - NeuroLearn{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3><i class="fas fa-brain"></i> Teste de Perfil Cognitivo</h3>
+                    <p class="mb-0">Descubra seu estilo de aprendizagem preferencial</p>
+                </div>
+                <div class="card-body">
+                    <div id="teste-container">
+                        <div id="instrucoes" class="text-center">
+                            <h4>Instruções</h4>
+                            <p>Você realizará 4 mini-testes para identificar seu perfil cognitivo:</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-eye text-primary"></i> <strong>Visual:</strong> Memorização de padrões visuais</li>
+                                <li><i class="fas fa-headphones text-success"></i> <strong>Auditivo:</strong> Sequências sonoras</li>
+                                <li><i class="fas fa-hand-paper text-warning"></i> <strong>Sinestésico:</strong> Coordenação e movimento</li>
+                                <li><i class="fas fa-cogs text-info"></i> <strong>Lógico:</strong> Resolução de problemas</li>
+                            </ul>
+                            <button class="btn btn-primary btn-lg" onclick="iniciarTeste()">Começar Teste</button>
+                        </div>
+
+                        <!-- Teste Visual -->
+                        <div id="teste-visual" class="teste-secao" style="display: none;">
+                            <h4><i class="fas fa-eye"></i> Teste Visual - Memorize a Sequência</h4>
+                            <div id="grade-visual" class="grade-memoria mb-3"></div>
+                            <div class="controles">
+                                <button id="btn-mostrar" class="btn btn-primary" onclick="mostrarSequencia()">Ver Sequência</button>
+                                <button id="btn-repetir" class="btn btn-success" onclick="iniciarReproducao()" style="display: none;">Reproduzir</button>
+                                <button id="btn-proximo-visual" class="btn btn-warning" onclick="proximoTeste()" style="display: none;">Próximo Teste</button>
+                            </div>
+                            <div class="progress mt-3">
+                                <div class="progress-bar" style="width: 25%">Teste 1/4</div>
+                            </div>
+                        </div>
+
+                        <!-- Teste Auditivo -->
+                        <div id="teste-auditivo" class="teste-secao" style="display: none;">
+                            <h4><i class="fas fa-headphones"></i> Teste Auditivo - Reproduza a Sequência</h4>
+                            <p>Ouça atentamente a sequência de sons e depois a reproduza:</p>
+                            <div class="botoes-som mb-3">
+                                <button class="btn btn-secondary som-btn" data-som="1">🔴</button>
+                                <button class="btn btn-secondary som-btn" data-som="2">🟡</button>
+                                <button class="btn btn-secondary som-btn" data-som="3">🟢</button>
+                                <button class="btn btn-secondary som-btn" data-som="4">🔵</button>
+                            </div>
+                            <div class="controles">
+                                <button id="btn-ouvir" class="btn btn-primary" onclick="tocarSequencia()">Ouvir Sequência</button>
+                                <button id="btn-verificar-audio" class="btn btn-success" onclick="verificarAudio()" style="display: none;">Verificar</button>
+                                <button id="btn-proximo-audio" class="btn btn-warning" onclick="proximoTeste()" style="display: none;">Próximo Teste</button>
+                            </div>
+                            <div class="progress mt-3">
+                                <div class="progress-bar" style="width: 50%">Teste 2/4</div>
+                            </div>
+                        </div>
+
+                        <!-- Teste Sinestésico -->
+                        <div id="teste-sinestesico" class="teste-secao" style="display: none;">
+                            <h4><i class="fas fa-hand-paper"></i> Teste Sinestésico - Coordenação</h4>
+                            <p>Clique nos círculos na ordem que aparecem, o mais rápido possível:</p>
+                            <div id="area-coordenacao" class="area-jogo mb-3"></div>
+                            <div class="controles">
+                                <button id="btn-iniciar-coordenacao" class="btn btn-primary" onclick="iniciarCoordenacao()">Iniciar</button>
+                                <button id="btn-proximo-sinestesico" class="btn btn-warning" onclick="proximoTeste()" style="display: none;">Próximo Teste</button>
+                            </div>
+                            <div class="progress mt-3">
+                                <div class="progress-bar" style="width: 75%">Teste 3/4</div>
+                            </div>
+                        </div>
+
+                        <!-- Teste Lógico -->
+                        <div id="teste-logico" class="teste-secao" style="display: none;">
+                            <h4><i class="fas fa-cogs"></i> Teste Lógico - Complete a Sequência</h4>
+                            <p>Qual número vem a seguir na sequência?</p>
+                            <div id="sequencia-logica" class="mb-3">
+                                <span class="numero">2</span>
+                                <span class="numero">4</span>
+                                <span class="numero">8</span>
+                                <span class="numero">16</span>
+                                <span class="numero">?</span>
+                            </div>
+                            <div class="opcoes-logica mb-3">
+                                <button class="btn btn-outline-primary opcao-btn" data-valor="24">24</button>
+                                <button class="btn btn-outline-primary opcao-btn" data-valor="32">32</button>
+                                <button class="btn btn-outline-primary opcao-btn" data-valor="30">30</button>
+                                <button class="btn btn-outline-primary opcao-btn" data-valor="20">20</button>
+                            </div>
+                            <div class="controles">
+                                <button id="btn-verificar-logico" class="btn btn-success" onclick="verificarLogico()" style="display: none;">Verificar</button>
+                                <button id="btn-finalizar" class="btn btn-warning" onclick="finalizarTeste()" style="display: none;">Finalizar Teste</button>
+                            </div>
+                            <div class="progress mt-3">
+                                <div class="progress-bar" style="width: 100%">Teste 4/4</div>
+                            </div>
+                        </div>
+
+                        <!-- Resultados -->
+                        <div id="resultados" class="teste-secao" style="display: none;">
+                            <h4><i class="fas fa-chart-bar"></i> Seus Resultados</h4>
+                            <div id="grafico-resultados" class="mb-4"></div>
+                            <div id="perfil-dominante" class="alert alert-info"></div>
+                            <div id="recomendacoes" class="card">
+                                <div class="card-header">
+                                    <h5>Recomendações de Estudo</h5>
+                                </div>
+                                <div class="card-body" id="texto-recomendacoes"></div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button class="btn btn-primary" onclick="window.location.href='/dashboard-aluno'">Voltar ao Dashboard</button>
+                                <button class="btn btn-secondary" onclick="refazerTeste()">Fazer Novamente</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.grade-memoria {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.celula-memoria {
+    width: 60px;
+    height: 60px;
+    background: #e9ecef;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.celula-memoria.ativa {
+    background: #007bff;
+    border-color: #0056b3;
+}
+
+.celula-memoria.selecionada {
+    background: #28a745;
+    border-color: #1e7e34;
+}
+
+.celula-memoria.erro {
+    background: #dc3545;
+    border-color: #bd2130;
+}
+
+.botoes-som {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.som-btn {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+    border-radius: 50%;
+}
+
+.som-btn.tocando {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0,123,255,0.5);
+}
+
+.area-jogo {
+    position: relative;
+    height: 300px;
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+}
+
+.circulo-coordenacao {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    animation: aparecer 0.5s ease-in;
+}
+
+@keyframes aparecer {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+.numero {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    background: #e9ecef;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    line-height: 56px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 5px;
+}
+
+.opcoes-logica {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.opcao-btn {
+    width: 80px;
+    height: 60px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.opcao-btn.selecionada {
+    background: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+</style>
+
+<script>
+let testeAtual = 0;
+let resultados = {
+    visual: 0,
+    auditivo: 0,
+    sinestesico: 0,
+    logico: 0
+};
+let tempoInicio = 0;
+
+// Variáveis do teste visual
+let sequenciaVisual = [];
+let respostaVisual = [];
+let nivelVisual = 1;
+
+// Variáveis do teste auditivo
+let sequenciaAudio = [];
+let respostaAudio = [];
+let nivelAudio = 1;
+
+// Variáveis do teste sinestésico
+let pontosCoordenacao = [];
+let pontoAtual = 0;
+let temposCoordenacao = [];
+
+function iniciarTeste() {
+    document.getElementById('instrucoes').style.display = 'none';
+    document.getElementById('teste-visual').style.display = 'block';
+    criarGradeVisual();
+    tempoInicio = Date.now();
+}
+
+function criarGradeVisual() {
+    const grade = document.getElementById('grade-visual');
+    grade.innerHTML = '';
+    
+    for (let i = 0; i < 16; i++) {
+        const celula = document.createElement('div');
+        celula.className = 'celula-memoria';
+        celula.dataset.index = i;
+        celula.onclick = () => clicarCelula(i);
+        grade.appendChild(celula);
+    }
+}
+
+function mostrarSequencia() {
+    sequenciaVisual = [];
+    const tamanho = nivelVisual + 2;
+    
+    for (let i = 0; i < tamanho; i++) {
+        sequenciaVisual.push(Math.floor(Math.random() * 16));
+    }
+    
+    let index = 0;
+    const intervalo = setInterval(() => {
+        if (index > 0) {
+            document.querySelector(`[data-index="${sequenciaVisual[index-1]}"]`).classList.remove('ativa');
+        }
+        
+        if (index < sequenciaVisual.length) {
+            document.querySelector(`[data-index="${sequenciaVisual[index]}"]`).classList.add('ativa');
+            index++;
+        } else {
+            clearInterval(intervalo);
+            document.querySelector(`[data-index="${sequenciaVisual[index-1]}"]`).classList.remove('ativa');
+            document.getElementById('btn-mostrar').style.display = 'none';
+            document.getElementById('btn-repetir').style.display = 'inline-block';
+        }
+    }, 800);
+}
+
+function iniciarReproducao() {
+    respostaVisual = [];
+    document.getElementById('btn-repetir').style.display = 'none';
+    document.querySelectorAll('.celula-memoria').forEach(celula => {
+        celula.classList.remove('ativa', 'selecionada', 'erro');
+    });
+}
+
+function clicarCelula(index) {
+    if (document.getElementById('btn-repetir').style.display !== 'none') return;
+    
+    respostaVisual.push(index);
+    document.querySelector(`[data-index="${index}"]`).classList.add('selecionada');
+    
+    if (respostaVisual.length === sequenciaVisual.length) {
+        verificarRespostaVisual();
+    }
+}
+
+function verificarRespostaVisual() {
+    let acertos = 0;
+    for (let i = 0; i < sequenciaVisual.length; i++) {
+        if (sequenciaVisual[i] === respostaVisual[i]) {
+            acertos++;
+        } else {
+            document.querySelector(`[data-index="${respostaVisual[i]}"]`).classList.add('erro');
+        }
+    }
+    
+    resultados.visual = Math.round((acertos / sequenciaVisual.length) * 100);
+    
+    setTimeout(() => {
+        document.getElementById('btn-proximo-visual').style.display = 'inline-block';
+    }, 1000);
+}
+
+function tocarSequencia() {
+    sequenciaAudio = [];
+    const tamanho = nivelAudio + 2;
+    
+    for (let i = 0; i < tamanho; i++) {
+        sequenciaAudio.push(Math.floor(Math.random() * 4) + 1);
+    }
+    
+    respostaAudio = [];
+    document.getElementById('btn-ouvir').style.display = 'none';
+    
+    let index = 0;
+    const intervalo = setInterval(() => {
+        if (index < sequenciaAudio.length) {
+            const botao = document.querySelector(`[data-som="${sequenciaAudio[index]}"]`);
+            botao.classList.add('tocando');
+            
+            // Simular som (em produção, usar Web Audio API)
+            setTimeout(() => {
+                botao.classList.remove('tocando');
+            }, 500);
+            
+            index++;
+        } else {
+            clearInterval(intervalo);
+            document.querySelectorAll('.som-btn').forEach(btn => {
+                btn.onclick = () => clicarSom(btn.dataset.som);
+            });
+        }
+    }, 700);
+}
+
+function clicarSom(som) {
+    respostaAudio.push(parseInt(som));
+    
+    if (respostaAudio.length === sequenciaAudio.length) {
+        document.getElementById('btn-verificar-audio').style.display = 'inline-block';
+    }
+}
+
+function verificarAudio() {
+    let acertos = 0;
+    for (let i = 0; i < sequenciaAudio.length; i++) {
+        if (sequenciaAudio[i] === respostaAudio[i]) {
+            acertos++;
+        }
+    }
+    
+    resultados.auditivo = Math.round((acertos / sequenciaAudio.length) * 100);
+    document.getElementById('btn-proximo-audio').style.display = 'inline-block';
+}
+
+function iniciarCoordenacao() {
+    pontosCoordenacao = [];
+    pontoAtual = 0;
+    temposCoordenacao = [];
+    
+    const area = document.getElementById('area-coordenacao');
+    area.innerHTML = '';
+    
+    document.getElementById('btn-iniciar-coordenacao').style.display = 'none';
+    
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            criarPontoCoordenacao(i + 1);
+        }, i * 1500);
+    }
+}
+
+function criarPontoCoordenacao(numero) {
+    const area = document.getElementById('area-coordenacao');
+    const circulo = document.createElement('div');
+    circulo.className = 'circulo-coordenacao';
+    circulo.textContent = numero;
+    circulo.style.left = Math.random() * (area.offsetWidth - 50) + 'px';
+    circulo.style.top = Math.random() * (area.offsetHeight - 50) + 'px';
+    
+    const tempoAparicao = Date.now();
+    
+    circulo.onclick = () => {
+        const tempoClique = Date.now();
+        temposCoordenacao.push(tempoClique - tempoAparicao);
+        circulo.remove();
+        pontoAtual++;
+        
+        if (pontoAtual === 5) {
+            calcularResultadoCoordenacao();
+        }
+    };
+    
+    area.appendChild(circulo);
+    
+    // Remover automaticamente após 3 segundos
+    setTimeout(() => {
+        if (circulo.parentNode) {
+            circulo.remove();
+            pontoAtual++;
+            if (pontoAtual === 5) {
+                calcularResultadoCoordenacao();
+            }
+        }
+    }, 3000);
+}
+
+function calcularResultadoCoordenacao() {
+    const tempoMedio = temposCoordenacao.length > 0 ? 
+        temposCoordenacao.reduce((a, b) => a + b, 0) / temposCoordenacao.length : 3000;
+    
+    // Pontuação baseada na velocidade (máximo 100)
+    resultados.sinestesico = Math.max(0, Math.round(100 - (tempoMedio / 30)));
+    
+    document.getElementById('btn-proximo-sinestesico').style.display = 'inline-block';
+}
+
+function verificarLogico() {
+    const opcaoSelecionada = document.querySelector('.opcao-btn.selecionada');
+    if (opcaoSelecionada && opcaoSelecionada.dataset.valor === '32') {
+        resultados.logico = 100;
+        opcaoSelecionada.style.background = '#28a745';
+    } else {
+        resultados.logico = 0;
+        if (opcaoSelecionada) {
+            opcaoSelecionada.style.background = '#dc3545';
+        }
+        // Mostrar resposta correta
+        document.querySelector('[data-valor="32"]').style.background = '#28a745';
+    }
+    
+    document.getElementById('btn-finalizar').style.display = 'inline-block';
+}
+
+function proximoTeste() {
+    const testes = ['teste-visual', 'teste-auditivo', 'teste-sinestesico', 'teste-logico'];
+    
+    document.getElementById(testes[testeAtual]).style.display = 'none';
+    testeAtual++;
+    
+    if (testeAtual < testes.length) {
+        document.getElementById(testes[testeAtual]).style.display = 'block';
+        
+        // Preparar teste auditivo
+        if (testeAtual === 1) {
+            document.querySelectorAll('.som-btn').forEach(btn => {
+                btn.onclick = null;
+            });
+        }
+    }
+}
+
+function finalizarTeste() {
+    document.getElementById('teste-logico').style.display = 'none';
+    document.getElementById('resultados').style.display = 'block';
+    
+    mostrarResultados();
+    salvarResultados();
+}
+
+function mostrarResultados() {
+    // Encontrar perfil dominante
+    const perfilDominante = Object.keys(resultados).reduce((a, b) => 
+        resultados[a] > resultados[b] ? a : b
+    );
+    
+    const nomes = {
+        visual: 'Visual',
+        auditivo: 'Auditivo', 
+        sinestesico: 'Sinestésico',
+        logico: 'Lógico'
+    };
+    
+    const recomendacoes = {
+        visual: 'Use mapas mentais, diagramas, cores e destacadores. Organize informações visualmente.',
+        auditivo: 'Estude ouvindo música, grave resumos falados, participe de discussões.',
+        sinestesico: 'Faça pausas frequentes, use objetos manipuláveis, estude caminhando.',
+        logico: 'Organize informações em sequências, use listas e esquemas estruturados.'
+    };
+    
+    // Mostrar gráfico simples
+    let graficoHtml = '<div class="row">';
+    Object.keys(resultados).forEach(tipo => {
+        const porcentagem = resultados[tipo];
+        graficoHtml += `
+            <div class="col-md-3 text-center">
+                <h6>${nomes[tipo]}</h6>
+                <div class="progress mb-2" style="height: 30px;">
+                    <div class="progress-bar ${tipo === perfilDominante ? 'bg-success' : 'bg-info'}" 
+                         style="width: ${porcentagem}%">${porcentagem}%</div>
+                </div>
+            </div>
+        `;
+    });
+    graficoHtml += '</div>';
+    
+    document.getElementById('grafico-resultados').innerHTML = graficoHtml;
+    document.getElementById('perfil-dominante').innerHTML = 
+        `<h5>Seu perfil dominante: <strong>${nomes[perfilDominante]}</strong></h5>`;
+    document.getElementById('texto-recomendacoes').innerHTML = recomendacoes[perfilDominante];
+}
+
+function salvarResultados() {
+    const dados = {
+        tipo_teste: 'perfil_cognitivo_completo',
+        pontuacao: Math.round(Object.values(resultados).reduce((a, b) => a + b, 0) / 4),
+        tempo_resposta: Math.round((Date.now() - tempoInicio) / 1000),
+        detalhes: resultados
+    };
+    
+    fetch('/executar-teste-cognitivo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dados)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.erro) {
+            console.error('Erro ao salvar teste:', data.erro);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+    });
+}
+
+function refazerTeste() {
+    location.reload();
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurar cliques nas opções lógicas
+    document.querySelectorAll('.opcao-btn').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('.opcao-btn').forEach(b => b.classList.remove('selecionada'));
+            btn.classList.add('selecionada');
+            document.getElementById('btn-verificar-logico').style.display = 'inline-block';
+        };
+    });
+});
+</script>
+{% endblock %}
+

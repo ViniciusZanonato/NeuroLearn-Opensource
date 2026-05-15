@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio do aluno - NeuroLearn{% endblock %}
+{% block page_class %}nl-wide{% endblock %}
+
+{% block content %}
+<section class="mb-5">
+    <div class="nl-eyebrow">Sessao do aluno · privacidade ativa</div>
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-4 mt-2">
+        <div>
+            <h1 class="mb-3">Seu espaco de estudo.</h1>
+            <p class="nl-lead mb-0">Responda atividades e questionarios com calma. As hipoteses completas ficam visiveis apenas para o educador responsavel.</p>
+        </div>
+        <a href="{{ url_for('questionario_neurolearn') }}" class="btn btn-primary btn-lg">Abrir questionario</a>
+    </div>
+</section>
+
+<section class="nl-grid nl-grid-3 mb-4">
+    <article class="nl-card nl-card-feature">
+        <div class="nl-eyebrow">Questionario</div>
+        {% if perfil_status.gerado %}
+            <h2>Concluido.</h2>
+            <p class="text-muted">Seu perfil foi gerado e enviado para leitura pedagogica.</p>
+            <span class="nl-pill nl-pill-sage">Protegido</span>
+        {% else %}
+            <h2>Pendente.</h2>
+            <p class="text-muted">Complete as respostas para liberar a analise da professora.</p>
+            <span class="nl-pill nl-pill-ochre">Em aberto</span>
+        {% endif %}
+    </article>
+    <article class="nl-card nl-card-feature">
+        <div class="nl-eyebrow">Atividades</div>
+        <h2>{{ atividades|length }}</h2>
+        <p class="text-muted mb-0">disponiveis para responder</p>
+    </article>
+    <article class="nl-card nl-card-feature">
+        <div class="nl-eyebrow">Privacidade</div>
+        <h2>Ativa.</h2>
+        <p class="text-muted mb-0">O aluno nao ve rotulos clinicos nem hipoteses sensiveis.</p>
+    </article>
+</section>
+
+<section class="nl-grid nl-grid-2">
+    <div class="nl-card p-4">
+        <div class="d-flex justify-content-between align-items-end gap-3 mb-3">
+            <div>
+                <div class="nl-eyebrow">Atividades</div>
+                <h2 class="mb-0">Disponiveis agora</h2>
+            </div>
+        </div>
+
+        {% if atividades %}
+            {% for atividade in atividades %}
+            <div class="nl-data-row" style="grid-template-columns: 72px minmax(0, 1fr) auto;">
+                <span class="nl-eyebrow mb-0">A{{ "%02d"|format(loop.index) }}</span>
+                <div>
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <strong>{{ atividade.titulo }}</strong>
+                        <span class="nl-pill">{{ atividade.tipo }}</span>
+                    </div>
+                    <div class="text-muted small mt-1">{{ atividade.descricao[:120] }}{% if atividade.descricao|length > 120 %}...{% endif %}</div>
+                </div>
+                <a href="{{ url_for('responder_atividade', atividade_id=atividade.id) }}" class="btn btn-primary btn-sm">Comecar</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="nl-panel">
+                <h3>Nenhuma atividade disponivel.</h3>
+                <p class="text-muted mb-0">Quando o professor criar uma atividade, ela aparece aqui.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <aside class="nl-grid">
+        <div class="nl-card p-4">
+            <div class="nl-eyebrow">Sua professora</div>
+            <h2 class="mb-2">Equipe pedagogica</h2>
+            <p class="text-muted">Os resultados completos ficam com a escola para apoiar adaptacoes e acompanhamento.</p>
+            <button class="btn btn-outline-primary btn-sm" onclick="showPrivacyInfo()">Como funciona</button>
+        </div>
+
+        <div class="nl-card p-4">
+            <div class="nl-eyebrow">Dica</div>
+            <p style="font-family: var(--font-serif); font-size: 28px; line-height: 1.15;" class="mb-0">
+                Nao existe resposta perfeita. Responda pensando no que acontece com mais frequencia.
+            </p>
+        </div>
+    </aside>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showPrivacyInfo() {
+    showNotification('Por privacidade, o conteudo completo do perfil e exibido apenas ao professor responsavel.', 'info', 7000);
+}
+</script>
+{% endblock %}

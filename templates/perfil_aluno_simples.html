@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil de {{ aluno.usuario.nome }} - NeuroLearn{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2><i class="fas fa-user-graduate"></i> Perfil do Aluno</h2>
+                            <p class="mb-0">Resumo do perfil de aprendizagem baseado no questionário NeuroLearn</p>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            {% if perfil %}
+                            <span class="badge badge-success badge-lg">
+                                <i class="fas fa-check-circle"></i> Perfil Gerado
+                            </span><br>
+                            <small>{{ perfil.data_geracao.strftime('%d/%m/%Y às %H:%M') }}</small>
+                            {% else %}
+                            <span class="badge badge-warning badge-lg">
+                                <i class="fas fa-clock"></i> Perfil Pendente
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Informações Básicas -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card bg-light h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-user fa-3x text-primary mb-3"></i>
+                                    <h6 class="text-muted">NOME</h6>
+                                    <h5>{{ aluno.usuario.nome }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-envelope fa-3x text-info mb-3"></i>
+                                    <h6 class="text-muted">EMAIL</h6>
+                                    <h6>{{ aluno.usuario.email }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-birthday-cake fa-3x text-warning mb-3"></i>
+                                    <h6 class="text-muted">IDADE</h6>
+                                    <h5>{{ aluno.idade }} anos</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-graduation-cap fa-3x text-success mb-3"></i>
+                                    <h6 class="text-muted">SÉRIE</h6>
+                                    <h6>{{ aluno.serie_ano }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informações Adicionais -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card bg-light h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-chalkboard-teacher fa-2x text-info mb-2"></i>
+                                    <h6 class="text-muted">PROFESSOR RESPONSÁVEL</h6>
+                                    <h6>{{ aluno.professor_responsavel }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light h-100">
+                                <div class="card-body text-center">
+                                    {% if aluno.questionario_completo %}
+                                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                    <h6 class="text-muted">STATUS DO QUESTIONÁRIO</h6>
+                                    <span class="badge badge-success badge-lg">67 questões respondidas</span>
+                                    {% else %}
+                                    <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                                    <h6 class="text-muted">STATUS DO QUESTIONÁRIO</h6>
+                                    <span class="badge badge-warning badge-lg">Pendente</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if perfil %}
+                    <!-- Análise de Consistência -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card border-warning" id="analise-consistencia">
+                                <div class="card-header bg-warning text-dark">
+                                    <h6><i class="fas fa-shield-check me-2"></i> Análise de Consistência das Respostas - Sistema IA</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="text-center">
+                                                <div class="display-4 text-primary" id="nivel-confianca">--%</div>
+                                                <small class="text-muted">Nível de Confiança</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div id="detalhes-consistencia">
+                                                <p><i class="fas fa-spinner fa-spin"></i> Analisando consistência das respostas...</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tipo de Perfil -->
+                    {% if perfil.tipo_perfil %}
+                    <div class="alert alert-info text-center mb-4">
+                        <h4><i class="fas fa-tag"></i> Tipo de Perfil: <strong>{{ perfil.tipo_perfil }}</strong></h4>
+                    </div>
+                    {% endif %}
+
+                    <!-- Descrição da IA -->
+                    <div class="card mb-4 border-primary">
+                        <div class="card-header bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h4><i class="fas fa-brain mr-2"></i> Opinião da IA sobre o Aluno</h4>
+                            <small><i class="fas fa-robot mr-1"></i> Análise baseada no questionário Forma Mentis NeuroLearn (67 questões)</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-1 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-quote-left fa-2x text-primary opacity-50"></i>
+                                </div>
+                                <div class="col-md-11">
+                                    <blockquote class="blockquote mb-0">
+                                        <p class="lead font-italic text-justify">{{ perfil.perfil_geral }}</p>
+                                        <footer class="blockquote-footer mt-3">
+                                            <cite title="Sistema NeuroLearn">Sistema NeuroLearn IA</cite> 
+                                            <small class="ml-2">{{ perfil.data_geracao.strftime('%d/%m/%Y às %H:%M') }}</small>
+                                        </footer>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Potenciais em Destaque -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h6><i class="fas fa-star"></i> Potenciais Expressivos</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-small">{{ perfil.potenciais_expressivos[:200] }}{% if perfil.potenciais_expressivos|length > 200 %}...{% endif %}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-warning">
+                                <div class="card-header bg-warning text-dark">
+                                    <h6><i class="fas fa-lightbulb"></i> Potenciais Cognitivos</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-small">{{ perfil.potenciais_cognitivos[:200] }}{% if perfil.potenciais_cognitivos|length > 200 %}...{% endif %}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% else %}
+                    <!-- Perfil Pendente -->
+                    <div class="text-center py-5">
+                        <i class="fas fa-hourglass-half fa-3x text-warning mb-3"></i>
+                        <h4>Perfil em Processamento</h4>
+                        <p class="text-muted">
+                            {% if aluno.questionario_completo %}
+                                O aluno completou o questionário e o perfil está sendo gerado pela IA.
+                                <br>Aguarde alguns minutos e recarregue a página.
+                            {% else %}
+                                O aluno ainda não completou o Questionário NeuroLearn.
+                                <br>Solicite que ele faça login e responda às 67 questões.
+                            {% endif %}
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Botão Principal para Ver Respostas do Questionário -->
+                    {% if perfil %}
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card border-info bg-light">
+                                <div class="card-body text-center py-3">
+                                    <h5 class="text-info mb-2">
+                                        <i class="fas fa-clipboard-list mr-2"></i>
+                                        Quer ver as respostas detalhadas do aluno?
+                                    </h5>
+                                    <p class="text-muted mb-3">Visualize todas as 67 respostas do questionário Forma Mentis organizadas por blocos temáticos</p>
+                                    <a href="{{ url_for('ver_respostas_questionario', aluno_id=aluno.id) }}" class="btn btn-info btn-lg px-5">
+                                        <i class="fas fa-search mr-2"></i> Ver Respostas do Questionário
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Botões de Ação Secundários -->
+                    <div class="row mt-4">
+                        <div class="col-md-4">
+                            <a href="{{ url_for('painel_professor') }}" class="btn btn-outline-primary btn-block">
+                                <i class="fas fa-arrow-left"></i> Voltar ao Painel
+                            </a>
+                        </div>
+                        {% if perfil %}
+                        <div class="col-md-4">
+                            <a href="{{ url_for('visualizar_perfil', aluno_id=aluno.id) }}" class="btn btn-success btn-block">
+                                <i class="fas fa-file-alt"></i> Ver Análise Completa
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-secondary btn-block" onclick="window.print()">
+                                <i class="fas fa-print"></i> Imprimir Perfil
+                            </button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.border-left {
+    border-left: 4px solid #007bff !important;
+}
+
+.badge-lg {
+    font-size: 0.9em;
+    padding: 0.5em 0.75em;
+}
+
+.text-small {
+    font-size: 0.9em;
+}
+
+.card-body p {
+    text-align: justify;
+}
+
+.opacity-50 {
+    opacity: 0.5;
+}
+
+.bg-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.blockquote {
+    border-left: 4px solid #007bff;
+    padding-left: 1rem;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+@media print {
+    .btn, .card-header.bg-gradient {
+        display: none !important;
+    }
+    .card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
+}
+</style>
+
+<script>
+// Carregar análise de consistência ao carregar a página
+document.addEventListener('DOMContentLoaded', function() {
+    {% if perfil %}
+    carregarAnaliseConsistencia({{ aluno.id }});
+    {% endif %}
+});
+
+function carregarAnaliseConsistencia(alunoId) {
+    fetch(`/analisar-consistencia/${alunoId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.erro) {
+                document.getElementById('nivel-confianca').textContent = 'N/A';
+                document.getElementById('detalhes-consistencia').innerHTML = 
+                    '<p class="text-danger"><i class="fas fa-exclamation-triangle"></i> Erro ao analisar: ' + data.erro + '</p>';
+                return;
+            }
+            
+            // Atualizar nível de confiança
+            const confiancaPorcentagem = Math.round(data.nivel_confianca * 100);
+            document.getElementById('nivel-confianca').textContent = confiancaPorcentagem + '%';
+            
+            // Definir cor baseada no nível
+            const elementoConfianca = document.getElementById('nivel-confianca');
+            if (confiancaPorcentagem >= 85) {
+                elementoConfianca.className = 'display-4 text-success';
+            } else if (confiancaPorcentagem >= 70) {
+                elementoConfianca.className = 'display-4 text-info';
+            } else if (confiancaPorcentagem >= 55) {
+                elementoConfianca.className = 'display-4 text-warning';
+            } else {
+                elementoConfianca.className = 'display-4 text-danger';
+            }
+            
+            // Atualizar detalhes
+            let detalhesHTML = '<h6><i class="fas fa-clipboard-check"></i> ' + data.recomendacao + '</h6>';
+            
+            if (data.detalhes) {
+                detalhesHTML += '<p>' + data.detalhes + '</p>';
+            }
+            
+            if (data.inconsistencias && data.inconsistencias.length > 0) {
+                detalhesHTML += '<small class="text-muted"><strong>Observações:</strong><br>';
+                data.inconsistencias.forEach(inconsistencia => {
+                    detalhesHTML += '• ' + inconsistencia + '<br>';
+                });
+                detalhesHTML += '</small>';
+            }
+            
+            document.getElementById('detalhes-consistencia').innerHTML = detalhesHTML;
+            
+            // Atualizar o card com a cor apropriada
+            const cardConsistencia = document.getElementById('analise-consistencia');
+            if (confiancaPorcentagem >= 85) {
+                cardConsistencia.className = 'card border-success';
+                cardConsistencia.querySelector('.card-header').className = 'card-header bg-success text-white';
+            } else if (confiancaPorcentagem >= 70) {
+                cardConsistencia.className = 'card border-info';
+                cardConsistencia.querySelector('.card-header').className = 'card-header bg-info text-white';
+            } else if (confiancaPorcentagem >= 55) {
+                cardConsistencia.className = 'card border-warning';
+                cardConsistencia.querySelector('.card-header').className = 'card-header bg-warning text-dark';
+            } else {
+                cardConsistencia.className = 'card border-danger';
+                cardConsistencia.querySelector('.card-header').className = 'card-header bg-danger text-white';
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            document.getElementById('nivel-confianca').textContent = 'Erro';
+            document.getElementById('detalhes-consistencia').innerHTML = 
+                '<p class="text-danger"><i class="fas fa-exclamation-triangle"></i> Erro ao carregar análise</p>';
+        });
+}
+</script>
+{% endblock %}
+

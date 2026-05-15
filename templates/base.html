@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NeuroLearn{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='neurolearn.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="nl-shell">
+        <nav class="nl-nav" aria-label="Navegacao principal">
+            <div class="nl-nav-inner">
+                <a class="nl-brand" href="{{ url_for('index') }}">
+                    <span class="nl-brand-mark">NL</span>
+                    <span>NeuroLearn</span>
+                    <span class="nl-brand-tag">Open Source</span>
+                </a>
+
+                <div class="nl-navlinks">
+                    {% if session.usuario_id %}
+                        {% if session.tipo == 'professor' %}
+                            <a class="nl-navlink" href="{{ url_for('dashboard_professor') }}">Painel</a>
+                            <a class="nl-navlink" href="{{ url_for('painel_professor') }}">Perfis</a>
+                            <a class="nl-navlink" href="{{ url_for('listar_alunos') }}">Alunos</a>
+                            <a class="nl-navlink" href="{{ url_for('criar_atividade') }}">Nova atividade</a>
+                        {% else %}
+                            <a class="nl-navlink" href="{{ url_for('dashboard_aluno') }}">Inicio</a>
+                            <a class="nl-navlink" href="{{ url_for('questionario_neurolearn') }}">Questionario</a>
+                            <a class="nl-navlink" href="{{ url_for('configuracoes_acessibilidade') }}">Acessibilidade</a>
+                        {% endif %}
+                        <button class="btn btn-outline-secondary btn-sm" type="button" onclick="toggleDarkMode()" id="darkModeToggle" aria-label="Alternar tema">
+                            <i class="fas fa-moon" id="darkModeIcon" aria-hidden="true"></i>
+                        </button>
+                        <a class="nl-navlink" href="{{ url_for('logout') }}">Sair</a>
+                    {% else %}
+                        <a class="nl-navlink" href="{{ url_for('login') }}">Entrar</a>
+                        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('registro') }}">Solicitar acesso</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        <main class="nl-page {% block page_class %}{% endblock %}">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="mb-4" aria-live="polite">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="nl-footer">
+            <div class="d-flex flex-wrap justify-content-between gap-3">
+                <span>NeuroLearn · Control + Amizade</span>
+                <span>IA educacional com privacidade e apoio pedagogico</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        class AccessibilityManager {
+            constructor() {
+                this.loadSettings();
+                this.applySettings();
+            }
+
+            loadSettings() {
+                this.settings = {
+                    darkMode: localStorage.getItem('darkMode') === 'true',
+                    highContrast: localStorage.getItem('highContrast') === 'true',
+                    fontSize: localStorage.getItem('fontSize') || 'normal',
+                    reduceAnimations: localStorage.getItem('reduceAnimations') === 'true',
+                    simpleNavigation: localStorage.getItem('simpleNavigation') === 'true'
+                };
+
+                {% if session.usuario_id %}
+                this.loadServerSettings();
+                {% endif %}
+            }
+
+            async loadServerSettings() {
+                try {
+                    const response = await fetch('/obter-configuracoes-acessibilidade');
+                    if (response.ok) {
+                        const serverSettings = await response.json();
+                        this.settings = {
+                            ...this.settings,
+                            darkMode: serverSettings.modo_escuro ?? this.settings.darkMode,
+                            highContrast: serverSettings.alto_contraste ?? this.settings.highContrast,
+                            fontSize: serverSettings.tamanho_fonte ?? this.settings.fontSize,
+                            reduceAnimations: serverSettings.reducao_animacoes ?? this.settings.reduceAnimations,
+                            simpleNavigation: serverSettings.navegacao_simplificada ?? this.settings.simpleNavigation
+                        };
+                        this.applySettings();
+                    }
+                } catch (error) {
+                    console.log('Configuracoes locais utilizadas');
+                }
+            }
+
+            applySettings() {
+                document.documentElement.setAttribute('data-theme', this.settings.darkMode ? 'dark' : 'light');
+                document.body.classList.toggle('high-contrast', this.settings.highContrast);
+                document.body.classList.toggle('reduce-animations', this.settings.reduceAnimations);
+                document.body.classList.remove('font-small', 'font-normal', 'font-large', 'font-extra-large');
+                document.body.classList.add(`font-${this.settings.fontSize}`);
+
+                const icon = document.getElementById('darkModeIcon');
+                if (icon) icon.className = this.settings.darkMode ? 'fas fa-sun' : 'fas fa-moon';
+            }
+
+            toggleDarkMode() {
+                this.settings.darkMode = !this.settings.darkMode;
+                this.saveSettings();
+                this.applySettings();
+            }
+
+            saveSettings() {
+                for (const [key, value] of Object.entries(this.settings)) {
+                    localStorage.setItem(key, value);
+                }
+
+                {% if session.usuario_id %}
+                fetch('/salvar-configuracoes-acessibilidade', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        modo_escuro: this.settings.darkMode,
+                        alto_contraste: this.settings.highContrast,
+                        tamanho_fonte: this.settings.fontSize,
+                        reducao_animacoes: this.settings.reduceAnimations,
+                        navegacao_simplificada: this.settings.simpleNavigation
+                    })
+                }).catch(() => {});
+                {% endif %}
+            }
+        }
+
+        let accessibilityManager;
+        document.addEventListener('DOMContentLoaded', () => {
+            accessibilityManager = new AccessibilityManager();
+        });
+
+        function toggleDarkMode() {
+            if (accessibilityManager) accessibilityManager.toggleDarkMode();
+        }
+
+        function showNotification(message, type = 'info', duration = 5000) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `${message}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>`;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.remove(), duration);
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

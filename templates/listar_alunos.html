@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Alunos - NeuroLearn{% endblock %}
+{% block page_class %}nl-wide{% endblock %}
+
+{% block content %}
+<section class="mb-4">
+    <div class="nl-eyebrow">{{ alunos|length }} alunos · ano letivo</div>
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mt-2">
+        <h1 class="mb-0">Alunos.</h1>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary btn-sm" type="button" onclick="exportarTabela()">Exportar CSV</button>
+            <a class="btn btn-primary btn-sm" href="{{ url_for('registro') }}">Convidar aluno</a>
+        </div>
+    </div>
+
+    <div class="nl-searchbar mt-4">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="search" id="filtroAluno" placeholder="Buscar por nome, turma ou e-mail...">
+        <span class="nl-pill">Status · todos</span>
+        <span class="nl-pill">Ordenar · recentes</span>
+    </div>
+</section>
+
+<section class="nl-card p-4">
+    <div class="nl-data-header" style="grid-template-columns: 2.2fr .7fr .8fr 1fr 1fr 1fr 120px;">
+        <span>Aluno</span>
+        <span>Idade</span>
+        <span>Serie</span>
+        <span>Questionario</span>
+        <span>Atividades</span>
+        <span>Ultima</span>
+        <span>Acoes</span>
+    </div>
+
+    {% if alunos %}
+        <div id="tabelaAlunos">
+            {% for aluno in alunos %}
+            <div class="nl-data-row aluno-row" style="grid-template-columns: 2.2fr .7fr .8fr 1fr 1fr 1fr 120px;" data-search="{{ aluno.usuario.nome|lower }} {{ aluno.usuario.email|lower }} {{ aluno.serie_ano|default('', true)|lower }}">
+                <div>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="nl-avatar">{{ aluno.usuario.nome.split()[0][0] }}{{ aluno.usuario.nome.split()[-1][0] if aluno.usuario.nome.split()|length > 1 else '' }}</span>
+                        <div>
+                            <strong>{{ aluno.usuario.nome }}</strong>
+                            <div class="text-muted small">{{ aluno.usuario.email }}</div>
+                        </div>
+                    </div>
+                </div>
+                <span class="nl-eyebrow mb-0">{{ aluno.idade or '-' }}</span>
+                <span>{{ aluno.serie_ano or '-' }}</span>
+                <span>
+                    {% if aluno.questionario_completo %}
+                        <span class="nl-pill nl-pill-sage">concluido</span>
+                    {% else %}
+                        <span class="nl-pill nl-pill-ochre">pendente</span>
+                    {% endif %}
+                </span>
+                <span class="nl-pill">{{ aluno.respostas|length }}</span>
+                <span class="nl-eyebrow mb-0">
+                    {% if aluno.respostas %}
+                        {{ aluno.respostas[-1].data_envio.strftime('%d/%m') }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </span>
+                <span class="d-flex gap-2">
+                    <a href="{{ url_for('relatorio_aluno', aluno_id=aluno.id) }}" class="btn btn-outline-primary btn-sm" title="Relatorio">
+                        <i class="fas fa-chart-line" aria-hidden="true"></i>
+                    </a>
+                    <a href="{{ url_for('perfil_aluno_simples', aluno_id=aluno.id) }}" class="btn btn-outline-primary btn-sm" title="Perfil">
+                        <i class="fas fa-user" aria-hidden="true"></i>
+                    </a>
+                    <button class="btn btn-outline-primary btn-sm" onclick="enviarMensagem({{ aluno.id }})" title="Mensagem">
+                        <i class="fas fa-message" aria-hidden="true"></i>
+                    </button>
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <h2>Nenhum aluno cadastrado.</h2>
+            <p class="text-muted">Os alunos aparecem aqui quando criarem conta e iniciarem o questionario.</p>
+        </div>
+    {% endif %}
+</section>
+
+<div class="modal fade" id="modalMensagem" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Enviar mensagem</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formMensagem">
+                    <div class="mb-3">
+                        <label for="assunto" class="form-label">Assunto</label>
+                        <input type="text" class="form-control" id="assunto" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mensagem" class="form-label">Mensagem</label>
+                        <textarea class="form-control" id="mensagem" rows="4" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="enviarMensagemForm()">Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let alunoSelecionado = null;
+
+function enviarMensagem(alunoId) {
+    alunoSelecionado = alunoId;
+    new bootstrap.Modal(document.getElementById('modalMensagem')).show();
+}
+
+function enviarMensagemForm() {
+    const assunto = document.getElementById('assunto').value;
+    const mensagem = document.getElementById('mensagem').value;
+    if (!assunto || !mensagem) {
+        showNotification('Preencha assunto e mensagem.', 'warning');
+        return;
+    }
+    showNotification('Mensagem registrada para envio.', 'success');
+    bootstrap.Modal.getInstance(document.getElementById('modalMensagem')).hide();
+    document.getElementById('formMensagem').reset();
+}
+
+document.getElementById('filtroAluno').addEventListener('input', function() {
+    const filtro = this.value.toLowerCase();
+    document.querySelectorAll('.aluno-row').forEach(row => {
+        row.style.display = row.dataset.search.includes(filtro) ? 'grid' : 'none';
+    });
+});
+
+function exportarTabela() {
+    showNotification('Exportacao CSV sera conectada na proxima etapa.', 'info');
+}
+</script>
+{% endblock %}

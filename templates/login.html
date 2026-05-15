@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Entrar - NeuroLearn{% endblock %}
+
+{% block content %}
+<section class="nl-auth">
+    <div>
+        <div class="nl-eyebrow mb-4">Acesso unificado · Educador e aluno</div>
+        <h1 class="mb-4">Bem-vindo de volta.</h1>
+        <p class="nl-lead mb-5">
+            Entre para continuar questionarios, revisar perfis, criar atividades e acompanhar recomendacoes pedagogicas.
+        </p>
+        <div class="nl-quote">
+            <p class="mb-4" style="font-family: var(--font-serif); font-size: clamp(30px, 4vw, 52px); line-height: 1.08;">
+                Observacao vira evidencia quando o professor tem um sistema claro para registrar, comparar e agir.
+            </p>
+            <div class="nl-grid nl-grid-3">
+                <div>
+                    <div class="nl-stat-num">67</div>
+                    <div class="nl-stat-label">questoes</div>
+                </div>
+                <div>
+                    <div class="nl-stat-num">7</div>
+                    <div class="nl-stat-label">dimensoes</div>
+                </div>
+                <div>
+                    <div class="nl-stat-num">1</div>
+                    <div class="nl-stat-label">plano claro</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nl-card nl-card-feature">
+        <div class="nl-eyebrow mb-2">Entrar · NeuroLearn</div>
+        <h2 class="mb-4">Acesse sua area.</h2>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="email" class="form-label">E-mail institucional</label>
+                <input type="email" class="form-control" id="email" name="email" autocomplete="email" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="senha" class="form-label">Senha</label>
+                <input type="password" class="form-control" id="senha" name="senha" autocomplete="current-password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100">Entrar</button>
+        </form>
+        <div class="nl-rule mt-4 pt-4">
+            <p class="mb-0">Ainda nao tem acesso? <a href="{{ url_for('registro') }}">Solicite uma conta</a>.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const button = this.querySelector('button[type="submit"]');
+    button.disabled = true;
+    button.textContent = 'Entrando...';
+
+    try {
+        const response = await fetch('{{ url_for("login") }}', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.redirected) {
+            window.location.href = response.url;
+            return;
+        }
+
+        if (response.ok) {
+            window.location.href = response.url || '{{ url_for("dashboard_aluno") }}';
+        } else {
+            const result = await response.json();
+            showNotification(result.erro || 'Credenciais invalidas', 'danger');
+        }
+    } catch (error) {
+        showNotification('Erro na comunicacao com o servidor', 'danger');
+    } finally {
+        button.disabled = false;
+        button.textContent = 'Entrar';
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Painel NeuroLearn - Professor{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2><i class="fas fa-chalkboard-teacher"></i> Painel NeuroLearn - Perfis de Aprendizagem</h2>
+                    <p class="mb-0">Visualize e gerencie os perfis de aprendizagem dos seus alunos</p>
+                </div>
+                <div class="card-body">
+                    
+                    <!-- Filtros -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <form method="GET" action="{{ url_for('painel_professor') }}">
+                                <div class="input-group">
+                                    <select name="tipo_perfil" class="form-control">
+                                        <option value="">Todos os tipos de perfil</option>
+                                        {% for tipo in tipos_perfil %}
+                                        <option value="{{ tipo }}" 
+                                            {% if tipo == tipo_filtro %}selected{% endif %}>
+                                            {{ tipo }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="submit">
+                                            <i class="fas fa-filter"></i> Filtrar
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <span class="badge badge-info">
+                                {{ alunos_perfis|length }} aluno(s) encontrado(s)
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Alunos -->
+                    <div class="row">
+                        {% for aluno, perfil in alunos_perfis %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 
+                                {% if perfil %}
+                                    {% if perfil.tipo_perfil == 'Sensorial Elevado' %}border-warning
+                                    {% elif perfil.tipo_perfil == 'Criativo Divergente' %}border-success  
+                                    {% elif perfil.tipo_perfil == 'Organizado Detalhista' %}border-info
+                                    {% else %}border-secondary{% endif %}
+                                {% else %}border-danger{% endif %}">
+                                
+                                <div class="card-header 
+                                    {% if perfil %}
+                                        {% if perfil.tipo_perfil == 'Sensorial Elevado' %}bg-warning text-dark
+                                        {% elif perfil.tipo_perfil == 'Criativo Divergente' %}bg-success text-white
+                                        {% elif perfil.tipo_perfil == 'Organizado Detalhista' %}bg-info text-white
+                                        {% else %}bg-secondary text-white{% endif %}
+                                    {% else %}bg-danger text-white{% endif %}">
+                                    
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-user"></i> {{ aluno.usuario.nome }}
+                                    </h6>
+                                    <small>{{ aluno.serie_ano }} - Prof: {{ aluno.professor_responsavel }}</small>
+                                </div>
+                                
+                                <div class="card-body">
+                                    {% if perfil %}
+                                    <!-- Perfil Gerado -->
+                                    <div class="mb-2">
+                                        <span class="badge badge-success">
+                                            <i class="fas fa-check-circle"></i> Perfil Gerado
+                                        </span>
+                                        {% if perfil.tipo_perfil %}
+                                        <span class="badge badge-primary">{{ perfil.tipo_perfil }}</span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <p class="text-small">
+                                        <strong>Potenciais:</strong><br>
+                                        {{ perfil.potenciais_expressivos[:100] }}...
+                                    </p>
+                                    
+                                    <small class="text-muted">
+                                        Gerado em: {{ perfil.data_geracao.strftime('%d/%m/%Y') }}
+                                    </small>
+                                    
+                                    {% else %}
+                                    <!-- Perfil Pendente -->
+                                    <div class="text-center">
+                                        <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                                        <p class="text-muted">
+                                            {% if aluno.questionario_completo %}
+                                                Perfil sendo processado...
+                                            {% else %}
+                                                Questionário pendente
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="card-footer">
+                                    {% if perfil %}
+                                    <div class="btn-group-vertical btn-block">
+                                        <a href="{{ url_for('perfil_aluno_simples', aluno_id=aluno.id) }}" 
+                                           class="btn btn-primary btn-sm">
+                                            <i class="fas fa-user"></i> Ver Perfil do Aluno
+                                        </a>
+                                        <a href="{{ url_for('ver_respostas_questionario', aluno_id=aluno.id) }}" 
+                                           class="btn btn-outline-info btn-sm">
+                                            <i class="fas fa-clipboard-list"></i> Ver Respostas
+                                        </a>
+                                    </div>
+                                    {% else %}
+                                    <button class="btn btn-secondary btn-sm btn-block" disabled>
+                                        <i class="fas fa-hourglass-half"></i> Aguardando Perfil
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if not alunos_perfis %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">Nenhum aluno encontrado</h4>
+                        <p class="text-muted">Não há alunos cadastrados ou que atendam aos filtros selecionados.</p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Seção de Atividades -->
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            <div class="card bg-gradient-primary text-white">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-8">
+                                            <h5><i class="fas fa-tasks me-2"></i> Gerenciar Atividades</h5>
+                                        </div>
+                                        <div class="col-md-4 text-end">
+                                            <a href="{{ url_for('criar_atividade') }}" class="btn btn-light btn-sm">
+                                                <i class="fas fa-plus me-1"></i> Nova Atividade
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body text-dark bg-light">
+                                    <p class="mb-3">Aqui você pode criar atividades personalizadas com arquivos anexos, datas limite e instruções especiais para analisar padrões de aprendizagem dos alunos.</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="text-center p-3 border rounded">
+                                                <i class="fas fa-file-upload fa-2x text-primary mb-2"></i>
+                                                <h6>Arquivos Anexos</h6>
+                                                <small>PDF, DOC, imagens e mais</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="text-center p-3 border rounded">
+                                                <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                                                <h6>Datas Limite</h6>
+                                                <small>Controle de prazos</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="text-center p-3 border rounded">
+                                                <i class="fas fa-star fa-2x text-success mb-2"></i>
+                                                <h6>Pontuação</h6>
+                                                <small>Sistema de avaliação</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Estatísticas Resumidas -->
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            <div class="card bg-light">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-chart-pie"></i> Resumo dos Perfis</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row text-center">
+                                        {% set perfis_gerados = alunos_perfis|selectattr('1')|list|length %}
+                                        {% set perfis_pendentes = (alunos_perfis|length) - perfis_gerados %}
+                                        
+                                        <div class="col-md-3">
+                                            <div class="card bg-success text-white">
+                                                <div class="card-body">
+                                                    <h3>{{ perfis_gerados }}</h3>
+                                                    <p>Perfis Gerados</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card bg-warning text-dark">
+                                                <div class="card-body">
+                                                    <h3>{{ perfis_pendentes }}</h3>
+                                                    <p>Perfis Pendentes</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card bg-info text-white">
+                                                <div class="card-body">
+                                                    <h3>{{ tipos_perfil|length }}</h3>
+                                                    <p>Tipos Diferentes</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card bg-primary text-white">
+                                                <div class="card-body">
+                                                    <h3>{{ alunos_perfis|length }}</h3>
+                                                    <p>Total de Alunos</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}{{ atividade.titulo }} - EduIA{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card card-custom">
+            <div class="card-header bg-success text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3><i class="fas fa-pencil-alt me-2"></i>{{ atividade.titulo }}</h3>
+                        <p class="mb-0">Tipo: <span class="badge bg-light text-dark">{{ atividade.tipo }}</span></p>
+                    </div>
+                    <div class="text-end">
+                        <div id="timer" class="h4 mb-0">
+                            <i class="fas fa-clock me-2"></i><span id="tempo">00:00</span>
+                        </div>
+                        <small>Tempo decorrido</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Instruções:</strong> Leia com atenção a atividade abaixo e responda da melhor forma possível. 
+                    Sua resposta será analisada pela nossa IA para identificar seus padrões de aprendizagem.
+                </div>
+                
+                <div class="mb-4 p-4 border rounded bg-light">
+                    <h5>Descrição da Atividade:</h5>
+                    <p class="mb-0">{{ atividade.descricao }}</p>
+                </div>
+                
+                <form method="POST" id="atividadeForm">
+                    <div class="mb-4">
+                        <label for="resposta" class="form-label">
+                            <h5><i class="fas fa-edit me-2"></i>Sua Resposta:</h5>
+                        </label>
+                        <textarea class="form-control" id="resposta" name="resposta" rows="10" 
+                                  placeholder="Digite sua resposta aqui. Seja o mais detalhado possível..." 
+                                  required></textarea>
+                        <div class="form-text">
+                            <i class="fas fa-lightbulb me-1"></i>
+                            Dica: Quanto mais detalhada sua resposta, melhor nossa IA poderá analisar seu estilo de aprendizagem.
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="tempo_resposta" name="tempo_resposta" value="0">
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success btn-lg me-2">
+                            <i class="fas fa-paper-plane me-2"></i>Enviar Resposta
+                        </button>
+                        <a href="{{ url_for('dashboard_aluno') }}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>Voltar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card card-custom">
+            <div class="card-header">
+                <h5><i class="fas fa-brain me-2"></i>Como a IA Analisa</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item border-0 px-0">
+                        <i class="fas fa-check text-success me-2"></i>
+                        <strong>Padrões de linguagem</strong> - estrutura e vocabulário
+                    </div>
+                    <div class="list-group-item border-0 px-0">
+                        <i class="fas fa-check text-success me-2"></i>
+                        <strong>Tempo de resposta</strong> - velocidade de processamento
+                    </div>
+                    <div class="list-group-item border-0 px-0">
+                        <i class="fas fa-check text-success me-2"></i>
+                        <strong>Estrutura lógica</strong> - organização do pensamento
+                    </div>
+                    <div class="list-group-item border-0 px-0">
+                        <i class="fas fa-check text-success me-2"></i>
+                        <strong>Criatividade</strong> - originalidade das soluções
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card card-custom">
+            <div class="card-header">
+                <h5><i class="fas fa-shield-alt me-2"></i>Privacidade</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success mb-0">
+                    <h6><i class="fas fa-lock me-2"></i>Seus dados estão seguros!</h6>
+                    <ul class="mb-0">
+                        <li>Análises baseadas em Ontopsicologia</li>
+                        <li>Dados utilizados apenas para fins educacionais</li>
+                        <li>Identificação de neurodivergências para apoio pedagógico</li>
+                        <li>Nenhuma informação é compartilhada sem consentimento</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let tempoInicio = Date.now();
+let timerInterval;
+
+function atualizarTimer() {
+    const agora = Date.now();
+    const tempoDecorrido = Math.floor((agora - tempoInicio) / 1000);
+    
+    const minutos = Math.floor(tempoDecorrido / 60);
+    const segundos = tempoDecorrido % 60;
+    
+    const tempoFormatado = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+    document.getElementById('tempo').textContent = tempoFormatado;
+    
+    // Atualizar campo hidden com tempo em segundos
+    document.getElementById('tempo_resposta').value = tempoDecorrido;
+}
+
+// Iniciar timer
+timerInterval = setInterval(atualizarTimer, 1000);
+
+// Submissão do formulário
+document.getElementById('atividadeForm').addEventListener('submit', function(e) {
+    // Parar o timer ao enviar
+    clearInterval(timerInterval);
+    
+    // Confirmação antes de enviar
+    const resposta = document.getElementById('resposta').value.trim();
+    if (resposta.length < 50) {
+        e.preventDefault();
+        alert('Por favor, escreva uma resposta mais detalhada (pelo menos 50 caracteres) para uma melhor análise.');
+        // Reiniciar timer se não enviar
+        timerInterval = setInterval(atualizarTimer, 1000);
+        return;
+    }
+    
+    if (!confirm('Tem certeza que deseja enviar sua resposta? Ela será analisada pela IA.')) {
+        e.preventDefault();
+        // Reiniciar timer se não enviar
+        timerInterval = setInterval(atualizarTimer, 1000);
+    }
+});
+
+// Salvar rascunho automaticamente (opcional)
+let rascunhoTimer;
+document.getElementById('resposta').addEventListener('input', function() {
+    clearTimeout(rascunhoTimer);
+    rascunhoTimer = setTimeout(() => {
+        const resposta = this.value;
+        if (resposta.length > 10) {
+            localStorage.setItem('rascunho_{{ atividade.id }}', resposta);
+        }
+    }, 2000);
+});
+
+// Carregar rascunho se existir
+window.addEventListener('load', function() {
+    const rascunho = localStorage.getItem('rascunho_{{ atividade.id }}');
+    if (rascunho) {
+        document.getElementById('resposta').value = rascunho;
+        if (confirm('Encontramos um rascunho salvo. Deseja continuar de onde parou?')) {
+            // Manter rascunho
+        } else {
+            document.getElementById('resposta').value = '';
+            localStorage.removeItem('rascunho_{{ atividade.id }}');
+        }
+    }
+});
+
+// Limpar rascunho após envio bem-sucedido
+window.addEventListener('beforeunload', function() {
+    // Isso será chamado quando a página for recarregada após envio
+    if (document.getElementById('atividadeForm').submitted) {
+        localStorage.removeItem('rascunho_{{ atividade.id }}');
+    }
+});
+</script>
+{% endblock %}
+

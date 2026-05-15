@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block title %}Criar Atividade - EduIA{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card card-custom">
+            <div class="card-header bg-primary text-white">
+                <h3><i class="fas fa-plus-circle me-2"></i>Criar Nova Atividade</h3>
+                <p class="mb-0">Desenvolva atividades que ajudam a IA a identificar padrões de aprendizagem</p>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label for="titulo" class="form-label">Título da Atividade</label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tipo" class="form-label">Tipo de Análise</label>
+                            <select class="form-select" id="tipo" name="tipo" required>
+                                <option value="">Selecione o tipo...</option>
+                                <option value="logica">Lógica Matemática</option>
+                                <option value="memoria">Memória</option>
+                                <option value="criatividade">Criatividade</option>
+                                <option value="linguagem">Linguagem</option>
+                                <option value="atencao">Atenção/Concentração</option>
+                                <option value="percepcao">Percepção Visual</option>
+                                <option value="social">Habilidades Sociais</option>
+                                <option value="motor">Coordenação Motora</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição da Atividade</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="6" required 
+                                  placeholder="Descreva detalhadamente a atividade que os alunos devem realizar..."></textarea>
+                    </div>
+                    
+                    <!-- Novos campos -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="data_limite" class="form-label">Data e Hora Limite</label>
+                            <input type="datetime-local" class="form-control" id="data_limite" name="data_limite">
+                            <small class="text-muted">Deixe em branco se não houver limite de tempo</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="pontuacao_maxima" class="form-label">Pontuação Máxima</label>
+                            <input type="number" class="form-control" id="pontuacao_maxima" name="pontuacao_maxima" value="100" min="1" max="1000">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="arquivo" class="form-label">Arquivo Anexo (Opcional)</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="arquivo" name="arquivo" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.ppt,.pptx,.xls,.xlsx">
+                            <label class="custom-file-label" for="arquivo">Escolher arquivo...</label>
+                        </div>
+                        <small class="text-muted">Formatos aceitos: PDF, DOC, DOCX, TXT, JPG, PNG, GIF, PPT, XLS (máx. 10MB)</small>
+                        <div class="mt-2" id="preview-arquivo" style="display: none;">
+                            <div class="alert alert-info">
+                                <i class="fas fa-file"></i> <span id="nome-arquivo"></span>
+                                <span class="badge badge-primary ml-2" id="tamanho-arquivo"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="instrucoes_especiais" class="form-label">Instruções Especiais (Opcional)</label>
+                        <textarea class="form-control" id="instrucoes_especiais" name="instrucoes_especiais" rows="3" 
+                                  placeholder="Instruções adicionais para os alunos (ex: tempo recomendado, materiais necessários, etc.)"></textarea>
+                    </div>
+                    
+                    <div id="dicas-tipo" class="alert alert-info" style="display: none;">
+                        <h6><i class="fas fa-lightbulb me-2"></i>Dicas para este tipo de atividade:</h6>
+                        <div id="dicas-conteudo"></div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-custom btn-lg text-white me-2">
+                            <i class="fas fa-save me-2"></i>Criar Atividade
+                        </button>
+                        <a href="{{ url_for('dashboard_professor') }}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>Voltar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card card-custom">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle me-2"></i>Como a IA Analisa as Respostas</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-brain text-primary me-2"></i>Ontopsicologia Aplicada</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Análise do "Em Si ôntico" individual</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Identificação de padrões únicos de resposta</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Mapeamento de potenciais cognitivos</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-search text-info me-2"></i>Detecção de Neurodivergências</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>TDAH - padrões de atenção</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Autismo - padrões sociais e sensoriais</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Dislexia - padrões de linguagem</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Superdotação - padrões avançados</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const dicasPorTipo = {
+    'logica': {
+        titulo: 'Atividades de Lógica Matemática',
+        dicas: [
+            'Inclua problemas com diferentes níveis de complexidade',
+            'Observe o tempo de resposta para identificar padrões de processamento',
+            'Problemas de sequência ajudam a identificar superdotação ou dificuldades de atenção'
+        ]
+    },
+    'memoria': {
+        titulo: 'Atividades de Memória',
+        dicas: [
+            'Teste tanto memória de curto quanto de longo prazo',
+            'Use elementos visuais e auditivos',
+            'Padrões de memória podem indicar TDAH ou problemas de atenção'
+        ]
+    },
+    'criatividade': {
+        titulo: 'Atividades Criativas',
+        dicas: [
+            'Permita respostas abertas e divergentes',
+            'Observe originalidade e fluência das ideias',
+            'Criatividade excepcional pode indicar superdotação'
+        ]
+    },
+    'linguagem': {
+        titulo: 'Atividades de Linguagem',
+        dicas: [
+            'Inclua leitura, escrita e compreensão',
+            'Observe padrões de erros ortográficos',
+            'Dificuldades persistentes podem indicar dislexia'
+        ]
+    },
+    'atencao': {
+        titulo: 'Atividades de Atenção',
+        dicas: [
+            'Atividades que exigem foco prolongado',
+            'Tarefas com distrações controladas',
+            'Padrões de desatenção podem indicar TDAH'
+        ]
+    },
+    'percepcao': {
+        titulo: 'Atividades de Percepção Visual',
+        dicas: [
+            'Use figuras, padrões e formas geométricas',
+            'Teste orientação espacial',
+            'Dificuldades podem indicar dispraxia ou dislexia'
+        ]
+    },
+    'social': {
+        titulo: 'Atividades Sociais',
+        dicas: [
+            'Simule situações sociais com personagens',
+            'Teste empatia e compreensão emocional',
+            'Padrões atípicos podem indicar autismo'
+        ]
+    },
+    'motor': {
+        titulo: 'Atividades Motoras',
+        dicas: [
+            'Atividades que envolvem coordenação fina e grossa',
+            'Observe velocidade e precisão',
+            'Dificuldades podem indicar dispraxia'
+        ]
+    }
+};
+
+document.getElementById('tipo').addEventListener('change', function() {
+    const tipo = this.value;
+    const dicasDiv = document.getElementById('dicas-tipo');
+    const conteudoDiv = document.getElementById('dicas-conteudo');
+    
+    if (tipo && dicasPorTipo[tipo]) {
+        const dicas = dicasPorTipo[tipo];
+        let html = `<strong>${dicas.titulo}</strong><ul>`;
+        
+        dicas.dicas.forEach(dica => {
+            html += `<li>${dica}</li>`;
+        });
+        
+        html += '</ul>';
+        conteudoDiv.innerHTML = html;
+        dicasDiv.style.display = 'block';
+    } else {
+        dicasDiv.style.display = 'none';
+    }
+});
+
+// Preview do arquivo
+document.getElementById('arquivo').addEventListener('change', function() {
+    const file = this.files[0];
+    const preview = document.getElementById('preview-arquivo');
+    const nomeArquivo = document.getElementById('nome-arquivo');
+    const tamanhoArquivo = document.getElementById('tamanho-arquivo');
+    const label = document.querySelector('.custom-file-label');
+    
+    if (file) {
+        // Atualizar label
+        label.textContent = file.name;
+        
+        // Mostrar preview
+        nomeArquivo.textContent = file.name;
+        
+        // Calcular tamanho em formato legível
+        let tamanho = file.size;
+        let unidade = 'bytes';
+        
+        if (tamanho >= 1024 * 1024) {
+            tamanho = (tamanho / (1024 * 1024)).toFixed(2);
+            unidade = 'MB';
+        } else if (tamanho >= 1024) {
+            tamanho = (tamanho / 1024).toFixed(2);
+            unidade = 'KB';
+        }
+        
+        tamanhoArquivo.textContent = tamanho + ' ' + unidade;
+        
+        // Validar tamanho (máx 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            preview.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    Arquivo muito grande! Máximo permitido: 10MB
+                </div>
+            `;
+            this.value = '';
+            label.textContent = 'Escolher arquivo...';
+        } else {
+            // Mostrar preview normal
+            preview.style.display = 'block';
+        }
+    } else {
+        label.textContent = 'Escolher arquivo...';
+        preview.style.display = 'none';
+    }
+});
+
+// Definir data mínima como agora
+const agora = new Date();
+const dataMinima = agora.toISOString().slice(0, 16);
+document.getElementById('data_limite').min = dataMinima;
+</script>
+{% endblock %}
+

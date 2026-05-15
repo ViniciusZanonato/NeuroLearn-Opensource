@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}NeuroLearn - IA educacional inclusiva{% endblock %}
+{% block page_class %}nl-wide{% endblock %}
+
+{% block content %}
+<section class="nl-hero">
+    <div>
+        <div class="nl-eyebrow mb-4">Questionario · IA pedagogica · LGPD</div>
+        <h1 class="nl-title mb-4">
+            Cada aluno aprende de um jeito diferente.
+        </h1>
+        <p class="nl-lead mb-4">
+            O NeuroLearn ajuda educadores a observar sinais, organizar evidencias e transformar respostas de questionarios em estrategias pedagogicas claras.
+        </p>
+        <div class="d-flex flex-wrap gap-3 mb-5">
+            <a href="{{ url_for('registro') }}" class="btn btn-primary btn-lg">Solicitar acesso</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">Entrar</a>
+        </div>
+        <div class="nl-stat-row">
+            <div class="nl-stat">
+                <div class="nl-stat-num">67</div>
+                <div class="nl-stat-label">questoes</div>
+            </div>
+            <div class="nl-stat">
+                <div class="nl-stat-num">7</div>
+                <div class="nl-stat-label">dimensoes</div>
+            </div>
+            <div class="nl-stat">
+                <div class="nl-stat-num">IA</div>
+                <div class="nl-stat-label">Gemini</div>
+            </div>
+            <div class="nl-stat">
+                <div class="nl-stat-num">LGPD</div>
+                <div class="nl-stat-label">privacidade</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nl-card nl-card-feature">
+        <div class="nl-eyebrow mb-3">Perfil · exemplo</div>
+        <div class="d-flex justify-content-between align-items-start gap-4 mb-4">
+            <div>
+                <h2 class="mb-2">Helena M.</h2>
+                <p class="mb-0 text-muted">Aprendizagem visual-espacial com necessidade de rotina clara.</p>
+            </div>
+            <span class="nl-pill nl-pill-sage">Confianca 0.82</span>
+        </div>
+        <div class="nl-grid">
+            <div>
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="nl-eyebrow">Criatividade verbal</span>
+                    <span class="nl-eyebrow">86</span>
+                </div>
+                <div class="progress"><div class="progress-bar" style="width: 86%"></div></div>
+            </div>
+            <div>
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="nl-eyebrow">Organizacao</span>
+                    <span class="nl-eyebrow">58</span>
+                </div>
+                <div class="progress"><div class="progress-bar" style="width: 58%"></div></div>
+            </div>
+            <div>
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="nl-eyebrow">Atencao sustentada</span>
+                    <span class="nl-eyebrow">42</span>
+                </div>
+                <div class="progress"><div class="progress-bar bg-warning" style="width: 42%"></div></div>
+            </div>
+        </div>
+        <div class="nl-panel mt-4">
+            <div class="nl-eyebrow mb-2">Recomendacao pedagogica</div>
+            <p class="mb-3">Fragmentar tarefas longas em blocos visuais, com previsibilidade e pontos de checagem curtos.</p>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="nl-pill">rotina visual</span>
+                <span class="nl-pill nl-pill-ochre">prioridade alta</span>
+                <span class="nl-pill">autonomia</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+        <div>
+            <div class="nl-eyebrow mb-2">Como funciona</div>
+            <h2 class="mb-0">Da observacao ao plano de acao.</h2>
+        </div>
+        <a href="{{ url_for('registro') }}" class="btn btn-outline-primary">Comecar agora</a>
+    </div>
+
+    <div class="nl-grid nl-grid-3">
+        <article class="card">
+            <div class="card-body">
+                <div class="nl-eyebrow mb-3">01 · Coleta</div>
+                <h3>Questionario guiado</h3>
+                <p>O estudante responde perguntas sem rótulos clinicos visiveis e com linguagem tranquila.</p>
+            </div>
+        </article>
+        <article class="card">
+            <div class="card-body">
+                <div class="nl-eyebrow mb-3">02 · Analise</div>
+                <h3>IA contextual</h3>
+                <p>A plataforma organiza padroes, consistencias e hipoteses para leitura do educador.</p>
+            </div>
+        </article>
+        <article class="card">
+            <div class="card-body">
+                <div class="nl-eyebrow mb-3">03 · Intervencao</div>
+                <h3>Plano pedagogico</h3>
+                <p>O professor recebe recomendacoes acionaveis para adaptar atividades e acompanhamento.</p>
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}

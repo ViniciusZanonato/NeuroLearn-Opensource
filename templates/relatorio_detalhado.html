@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório Detalhado - {{ aluno.usuario.nome }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        📊 Relatório Detalhado de Neurodivergência
+                    </h3>
+                    <div>
+                        <button onclick="imprimirRelatorio()" class="btn btn-light btn-sm me-2">
+                            <i class="fas fa-print"></i> Imprimir
+                        </button>
+                        <button onclick="baixarRelatorio()" class="btn btn-light btn-sm">
+                            <i class="fas fa-download"></i> Baixar
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Relatório Formatado -->
+                    <div id="relatorio-formatado" class="font-monospace" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; white-space: pre-wrap; line-height: 1.4; font-size: 14px; overflow-x: auto;">
+{{ relatorio_formatado }}
+                    </div>
+                    
+                    <!-- Botões de Ação -->
+                    <div class="mt-4 d-flex gap-2">
+                        <a href="{{ url_for('painel_professor') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Voltar ao Painel
+                        </a>
+                        <a href="{{ url_for('visualizar_perfil', aluno_id=aluno.id) }}" class="btn btn-info">
+                            <i class="fas fa-user"></i> Ver Perfil Completo
+                        </a>
+                        <a href="{{ url_for('ver_respostas_questionario', aluno_id=aluno.id) }}" class="btn btn-outline-primary">
+                            <i class="fas fa-list"></i> Ver Respostas do Questionário
+                        </a>
+                    </div>
+                    
+                    <!-- Informações Técnicas -->
+                    <div class="mt-4">
+                        <div class="card border-left-info">
+                            <div class="card-body">
+                                <h6 class="text-info">
+                                    <i class="fas fa-info-circle"></i> Informações Técnicas
+                                </h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <small class="text-muted">
+                                            <strong>Aluno:</strong> {{ aluno.usuario.nome }}<br>
+                                            <strong>E-mail:</strong> {{ aluno.usuario.email }}<br>
+                                            <strong>Série/Ano:</strong> {{ aluno.serie_ano }}<br>
+                                            <strong>Idade:</strong> {{ aluno.idade }} anos
+                                        </small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <small class="text-muted">
+                                            <strong>Professor Responsável:</strong> {{ aluno.professor_responsavel }}<br>
+                                            <strong>Data do Perfil:</strong> {{ perfil.data_geracao.strftime('%d/%m/%Y às %H:%M') if perfil.data_geracao else 'N/A' }}<br>
+                                            <strong>Tipo de Perfil:</strong> {{ perfil.tipo_perfil or 'Não definido' }}<br>
+                                            <strong>Status:</strong> <span class="badge bg-success">Ativo</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Disclaimer -->
+                    <div class="mt-3">
+                        <div class="alert alert-warning" role="alert">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-exclamation-triangle"></i> Importante
+                            </h6>
+                            <p class="mb-0">
+                                Este relatório é gerado automaticamente pelo sistema NeuroLearn e deve ser usado apenas como ferramenta de apoio pedagógico. 
+                                Para diagnósticos ou confirmações de neurodivergências, é necessária avaliação por profissionais especializados.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function imprimirRelatorio() {
+    // Criar nova janela com o conteúdo do relatório
+    const relatorio = document.getElementById('relatorio-formatado').innerText;
+    const nomeAluno = '{{ aluno.usuario.nome }}';
+    const dataAtual = new Date().toLocaleDateString('pt-BR');
+    
+    const janelaImpressao = window.open('', '_blank');
+    janelaImpressao.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Relatório de Neurodivergência - ${nomeAluno}</title>
+            <style>
+                body {
+                    font-family: 'Courier New', monospace;
+                    margin: 20px;
+                    line-height: 1.4;
+                    font-size: 12px;
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 20px;
+                    border-bottom: 2px solid #333;
+                    padding-bottom: 10px;
+                }
+                .footer {
+                    margin-top: 20px;
+                    text-align: center;
+                    font-size: 10px;
+                    color: #666;
+                }
+                pre {
+                    white-space: pre-wrap;
+                    word-wrap: break-word;
+                }
+                @media print {
+                    body { margin: 0; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h2>SISTEMA NEUROLEARN - RELATÓRIO DE NEURODIVERGÊNCIA</h2>
+                <p>Impresso em: ${dataAtual}</p>
+            </div>
+            <pre>${relatorio}</pre>
+            <div class="footer">
+                <p>Gerado pelo Sistema NeuroLearn - Equipe Control + Amizade</p>
+                <p>Este documento é confidencial e destinado exclusivamente ao uso pedagógico</p>
+            </div>
+        </body>
+        </html>
+    `);
+    janelaImpressao.document.close();
+    janelaImpressao.print();
+}
+
+function baixarRelatorio() {
+    const relatorio = document.getElementById('relatorio-formatado').innerText;
+    const nomeAluno = '{{ aluno.usuario.nome }}'.replace(/\s+/g, '_');
+    const dataAtual = new Date().toISOString().split('T')[0];
+    const nomeArquivo = `relatorio_neurodivergencia_${nomeAluno}_${dataAtual}.txt`;
+    
+    const blob = new Blob([relatorio], { type: 'text/plain;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = nomeArquivo;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    
+    // Mostrar feedback
+    showToast('Relatório baixado com sucesso!', 'success');
+}
+
+function showToast(message, type) {
+    // Função simples para mostrar feedback
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} position-fixed`;
+    toast.style.cssText = `
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    `;
+    toast.textContent = message;
+    
+    document.body.appendChild(toast);
+    
+    // Animar entrada
+    setTimeout(() => toast.style.opacity = '1', 100);
+    
+    // Remover após 3 segundos
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => document.body.removeChild(toast), 300);
+    }, 3000);
+}
+</script>
+{% endblock %}
+

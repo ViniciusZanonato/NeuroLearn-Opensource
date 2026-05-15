@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório: {{ aluno.usuario.nome }} - EduIA{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card card-custom bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2><i class="fas fa-chart-line me-2"></i>Relatório Detalhado</h2>
+                        <h4>{{ aluno.usuario.nome }}</h4>
+                        <p class="mb-0">Análise completa baseada em Ontopsicologia e IA</p>
+                    </div>
+                    <div class="text-end">
+                        <div class="avatar-circle bg-white text-primary" style="width: 80px; height: 80px; font-size: 28px;">
+                            {{ aluno.usuario.nome.split()[0][0] }}{{ aluno.usuario.nome.split()[-1][0] if aluno.usuario.nome.split()|length > 1 else '' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card card-custom text-center">
+            <div class="card-body">
+                <i class="fas fa-user fa-2x text-info mb-3"></i>
+                <h6>Idade</h6>
+                <h4>{{ aluno.idade or '-' }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-custom text-center">
+            <div class="card-body">
+                <i class="fas fa-graduation-cap fa-2x text-success mb-3"></i>
+                <h6>Série</h6>
+                <h4>{{ aluno.serie or '-' }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-custom text-center">
+            <div class="card-body">
+                <i class="fas fa-tasks fa-2x text-warning mb-3"></i>
+                <h6>Atividades</h6>
+                <h4>{{ respostas|length }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-custom text-center">
+            <div class="card-body">
+                <i class="fas fa-brain fa-2x text-danger mb-3"></i>
+                <h6>Análises IA</h6>
+                <h4>{{ analises|length }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card card-custom">
+            <div class="card-header">
+                <h5><i class="fas fa-brain me-2"></i>Análises de IA - Neurodivergências</h5>
+            </div>
+            <div class="card-body">
+                {% if analises %}
+                    {% for analise in analises %}
+                    <div class="alert alert-info mb-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6><i class="fas fa-robot me-2"></i>{{ analise.tipo_analise.title() }}</h6>
+                                <small class="text-muted">{{ analise.data_analise.strftime('%d/%m/%Y às %H:%M') }}</small>
+                            </div>
+                            <span class="badge bg-primary">{{ (analise.confianca * 100)|round }}% confiança</span>
+                        </div>
+                        <hr>
+                        <div class="mt-2">
+                            <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; font-size: 14px;">{{ analise.resultado }}</pre>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-brain fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Análises em Processamento</h5>
+                        <p class="text-muted">As análises de IA aparecerão aqui conforme as atividades forem respondidas</p>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Como funciona:</strong> Nossa IA analisa cada resposta usando princípios da Ontopsicologia 
+                            para identificar padrões únicos de aprendizagem e possíveis neurodivergências.
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card card-custom mt-4">
+            <div class="card-header">
+                <h5><i class="fas fa-history me-2"></i>Histórico de Respostas</h5>
+            </div>
+            <div class="card-body">
+                {% if respostas %}
+                    <div class="timeline">
+                        {% for resposta in respostas[-10:] %}
+                        <div class="timeline-item border-left border-primary pl-3 pb-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">{{ resposta.atividade.titulo }}</h6>
+                                    <span class="badge bg-info mb-2">{{ resposta.atividade.tipo }}</span>
+                                    <p class="text-muted small mb-2">{{ resposta.resposta[:150] }}{% if resposta.resposta|length > 150 %}...{% endif %}</p>
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>{{ resposta.data_envio.strftime('%d/%m/%Y às %H:%M') }}
+                                        {% if resposta.tempo_resposta %}
+                                            | <i class="fas fa-stopwatch me-1"></i>{{ resposta.tempo_resposta }}s
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Nenhuma resposta ainda</h5>
+                        <p class="text-muted">O histórico de respostas aparecerá aqui</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card card-custom">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-pie me-2"></i>Perfil de Aprendizagem</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h6>Habilidades Avaliadas:</h6>
+                    {% set tipos_atividades = respostas|map(attribute='atividade.tipo')|unique|list %}
+                    {% if tipos_atividades %}
+                        {% for tipo in tipos_atividades %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>
+                                {% if tipo == 'logica' %}
+                                    <i class="fas fa-calculator text-primary me-2"></i>Lógica
+                                {% elif tipo == 'memoria' %}
+                                    <i class="fas fa-memory text-info me-2"></i>Memória
+                                {% elif tipo == 'criatividade' %}
+                                    <i class="fas fa-paint-brush text-warning me-2"></i>Criatividade
+                                {% elif tipo == 'linguagem' %}
+                                    <i class="fas fa-comment text-success me-2"></i>Linguagem
+                                {% else %}
+                                    <i class="fas fa-brain text-secondary me-2"></i>{{ tipo.title() }}
+                                {% endif %}
+                            </span>
+                            <span class="badge bg-light text-dark">{{ respostas|selectattr('atividade.tipo', 'equalto', tipo)|list|length }}</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">Nenhuma atividade respondida ainda</p>
+                    {% endif %}
+                </div>
+                
+                <div class="alert alert-warning">
+                    <h6><i class="fas fa-lightbulb me-2"></i>Recomendações Pedagógicas</h6>
+                    {% if analises %}
+                        <p class="small mb-0">Baseado nas análises de IA disponíveis, recomenda-se acompanhamento personalizado.</p>
+                    {% else %}
+                        <p class="small mb-0">Aguarde mais respostas para gerar recomendações personalizadas baseadas em Ontopsicologia.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="card card-custom mt-3">
+            <div class="card-header">
+                <h5><i class="fas fa-cog me-2"></i>Ações</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" onclick="gerarRelatorio()">
+                        <i class="fas fa-file-pdf me-2"></i>Gerar PDF
+                    </button>
+                    <button class="btn btn-info" onclick="compartilharRelatorio()">
+                        <i class="fas fa-share me-2"></i>Compartilhar
+                    </button>
+                    <button class="btn btn-warning" onclick="novaAnalise()">
+                        <i class="fas fa-brain me-2"></i>Nova Análise IA
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card card-custom mt-3">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle me-2"></i>Sobre a Análise</h5>
+            </div>
+            <div class="card-body">
+                <small>
+                    <p><strong>Ontopsicologia:</strong> Baseada nos estudos de Antonio Meneghetti, nossa IA identifica o "Em Si ôntico" individual.</p>
+                    <p><strong>Neurodivergências:</strong> Identificação responsável de TDAH, Autismo, Dislexia e outras condições.</p>
+                    <p><strong>Confidencial:</strong> Todas as análises são privadas e utilizadas apenas para fins educacionais.</p>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <a href="{{ url_for('listar_alunos') }}" class="btn btn-outline-secondary btn-lg">
+            <i class="fas fa-arrow-left me-2"></i>Voltar para Lista de Alunos
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.timeline-item {
+    position: relative;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 8px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #007bff;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px #007bff;
+}
+
+.avatar-circle {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+</style>
+
+<script>
+function gerarRelatorio() {
+    alert('Função em desenvolvimento - Gerar relatório PDF');
+}
+
+function compartilharRelatorio() {
+    alert('Função em desenvolvimento - Compartilhar relatório');
+}
+
+function novaAnalise() {
+    alert('Função em desenvolvimento - Solicitar nova análise IA');
+}
+</script>
+{% endblock %}
+

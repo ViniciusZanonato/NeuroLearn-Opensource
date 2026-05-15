@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Meu Perfil de Aprendizagem NeuroLearn{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white text-center">
+                    <h2><i class="fas fa-user-graduate"></i> Seu Perfil de Aprendizagem NeuroLearn</h2>
+                    <p class="mb-0">{{ aluno.usuario.nome }} - {{ aluno.serie_ano }}</p>
+                    {% if perfil %}
+                    <small>Perfil gerado em: {{ perfil.data_geracao.strftime('%d/%m/%Y às %H:%M') }}</small>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if perfil %}
+                    
+                    <!-- Reforço Motivacional -->
+                    <div class="alert alert-info text-center mb-4">
+                        <h4><i class="fas fa-star"></i> Mensagem Especial para Você</h4>
+                        <p class="mb-0">{{ perfil.reforco_motivacional }}</p>
+                    </div>
+
+                    <!-- Perfil Geral -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5><i class="fas fa-user"></i> Seu Perfil Geral</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>{{ perfil.perfil_geral }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Potenciais -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-info text-white">
+                                    <h5><i class="fas fa-palette"></i> Seus Potenciais Expressivos</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>{{ perfil.potenciais_expressivos }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-warning text-dark">
+                                    <h5><i class="fas fa-brain"></i> Seus Potenciais Cognitivos</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>{{ perfil.potenciais_cognitivos }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Indícios de Neurodivergências -->
+                    {% if perfil.indicios_neurodivergencias %}
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h5><i class="fas fa-search"></i> Características Especiais do Seu Aprendizado</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-light">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i> 
+                                    Esta análise não substitui uma avaliação profissional e é destinada apenas para fins educacionais.
+                                </small>
+                            </div>
+                            <p>{{ perfil.indicios_neurodivergencias }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Botões de Ação -->
+                    <div class="text-center">
+                        <a href="{{ url_for('dashboard_aluno') }}" class="btn btn-primary">
+                            <i class="fas fa-home"></i> Voltar ao Dashboard
+                        </a>
+                        <button class="btn btn-success" onclick="window.print()">
+                            <i class="fas fa-print"></i> Imprimir Perfil
+                        </button>
+                    </div>
+
+                    {% else %}
+                    <div class="alert alert-warning text-center">
+                        <h4><i class="fas fa-clock"></i> Perfil em Processamento</h4>
+                        <p>Seu perfil de aprendizagem ainda está sendo gerado. Por favor, aguarde alguns minutos e recarregue a página.</p>
+                        <a href="{{ url_for('dashboard_aluno') }}" class="btn btn-primary">Voltar ao Dashboard</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    .btn, .card-header, nav, footer {
+        display: none !important;
+    }
+    .card {
+        border: none !important;
+        box-shadow: none !important;
+    }
+    .alert {
+        border: 1px solid #000 !important;
+    }
+}
+</style>
+{% endblock %}
+

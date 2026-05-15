@@ -1,93 +1,103 @@
-# NeuroLearn OpenSource
+# NeuroLearn
 
-Sistema Flask para apoiar educadores na identificacao de perfis de aprendizagem e possiveis indicadores de neurodivergencia a partir de questionarios, atividades e relatorios com IA.
+Flask-based platform that helps educators identify learning profiles and neurodiversity indicators through questionnaires, AI-generated reports, and behavioral analytics.
 
-## Funcionalidades
+## Features
 
-- Cadastro e login de professores e alunos.
-- Questionario NeuroLearn com 67 questoes em 7 dimensoes.
-- Geracao de perfil de aprendizagem com Google Gemini.
-- Dashboard do educador com atividades, alunos e leitura pedagogica.
-- Dashboard do aluno com privacidade: hipoteses completas ficam restritas ao professor.
-- Relatorios e filtros para leitura pedagogica.
-- Configuracoes de acessibilidade.
+- Role-based auth — separate dashboards for teachers and students
+- 67-question NeuroLearn questionnaire across 7 dimensions (Ontopsicology framework)
+- AI-generated learning profiles via local Ollama (default) or Google Gemini (optional)
+- Teacher panel with student profiles, activities, detailed reports, and behavioral analytics
+- Student privacy by design — full profile hypotheses are restricted to teachers only
+- Adaptive learning paths matched to student profile type
+- Pomodoro-style study schedules with auto-generated sessions
+- Virtual assistant with pedagogical guardrails
+- Accessibility settings (dark mode, font size, TTS, high contrast, reduced motion)
+- Content library (video, audio, games) with accessibility metadata
+- Behavior monitoring: time-on-task, error rates, peak activity hours
 
 ## Stack
 
-- Python + Flask
-- Flask-SQLAlchemy
-- SQLite local
+- Python 3.10+ / Flask 3.1
+- Flask-SQLAlchemy + SQLite
 - Jinja2 templates
-- CSS proprio baseado no design system editorial da pasta local `Design/`
-- IA local via Ollama por padrao
+- Local AI via Ollama (default) — keeps student data on-premises
+- Google Gemini as optional fallback
 
-## Estrutura
+## Project Structure
 
 ```text
 .
-├── app.py
-├── filtro_relatorio_neurodivergencia.py
-├── init_db.py
-├── iniciar_servidor.py
-├── requirements.txt
+├── app/
+│   ├── __init__.py          # app factory
+│   ├── config.py
+│   ├── extensions.py
+│   ├── models.py            # 13 database models
+│   ├── utils/
+│   │   ├── ai.py            # Ollama / Gemini integration
+│   │   ├── security.py      # auth decorators, validators
+│   │   └── monitoring.py    # behavioral logging
+│   └── blueprints/
+│       ├── auth/            # login, logout, register
+│       ├── main/            # landing page
+│       ├── professor/       # teacher routes
+│       ├── aluno/           # student routes
+│       └── relatorios/      # reports
+├── tests/                   # pytest smoke suite (34 tests)
+├── templates/
 ├── static/
-│   ├── logo.jpg
-│   └── neurolearn.css
-└── templates/
+├── run.py
+├── init_db.py
+└── requirements.txt
 ```
-
-Arquivos locais como banco SQLite, caches Python e a pasta `Design/` ficam fora do versionamento.
 
 ## Setup
 
 ```bash
 python -m venv .venv
+# Windows
 .venv\Scripts\activate
+# macOS / Linux
+source .venv/bin/activate
+
 pip install -r requirements.txt
-copy .env.example .env
+cp .env.example .env   # edit as needed
 python init_db.py
-python iniciar_servidor.py
+python run.py
 ```
 
-O app roda em:
+App runs at `http://127.0.0.1:5000`
 
-```text
-http://127.0.0.1:5000
+## Running Tests
+
+```bash
+pip install pytest
+pytest tests/ -v
 ```
 
-## Variaveis de ambiente
-
-Configure no `.env`:
+## Environment Variables
 
 ```text
-SECRET_KEY=troque-esta-chave
-GEMINI_API_KEY=sua-chave-gemini
-```
-
-Por padrao, o NeuroLearn usa Ollama local para evitar envio de dados sensiveis de alunos a servicos externos:
-
-```text
-AI_PROVIDER=ollama
+SECRET_KEY=change-this-key
+AI_PROVIDER=ollama          # or gemini
 OLLAMA_BASE_URL=http://127.0.0.1:11434
 OLLAMA_MODEL=gemma3:12b
+OLLAMA_TIMEOUT=180
+GEMINI_API_KEY=             # required only if AI_PROVIDER=gemini
 ```
 
-Antes de usar IA, inicie o Ollama e instale um modelo instruction-tuned adequado ao hardware:
+By default, NeuroLearn uses a local Ollama instance to avoid sending sensitive student data to external services. Start Ollama and pull a model before use:
 
 ```bash
 ollama pull gemma3:12b
 ```
 
-Se o computador nao tiver memoria suficiente, use um modelo menor e ajuste `OLLAMA_MODEL`.
+For lower-memory machines, use a smaller model and adjust `OLLAMA_MODEL`.
 
-O Gemini continua disponivel apenas como opcional, definindo `AI_PROVIDER=gemini` e `GEMINI_API_KEY`. Use isso somente se a politica de privacidade da escola permitir envio externo de dados.
+Gemini is available as an optional provider (`AI_PROVIDER=gemini`). Only use it if your institution's privacy policy permits external data processing.
 
-Importante: a IA gera hipoteses pedagogicas e recomendacoes de apoio. Ela nao substitui avaliacao clinica, diagnostico profissional ou decisao pedagogica humana.
+> **Note:** AI outputs are pedagogical hypotheses and support recommendations — not clinical diagnoses. They do not replace professional assessment or human pedagogical judgment.
 
-## Repositorio
+## License
 
-Repositorio publico limpo:
-
-```text
-https://github.com/ViniciusZanonato/NeuroLearn-Opensource
-```
+MIT

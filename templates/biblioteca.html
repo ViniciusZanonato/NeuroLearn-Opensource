@@ -12,7 +12,7 @@
             <p class="nl-lead mb-0">Materiais de apoio com metadados de acessibilidade.</p>
         </div>
         {% if session.tipo == 'professor' %}
-        <a class="btn btn-primary" href="{{ url_for('adicionar_conteudo_biblioteca') }}">Adicionar conteudo</a>
+        <a class="btn btn-primary" href="{{ url_for('professor.adicionar_conteudo_biblioteca') }}">Adicionar conteudo</a>
         {% endif %}
     </div>
 </section>

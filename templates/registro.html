@@ -51,7 +51,7 @@
         </div>
 
         <button class="btn btn-primary w-100" type="submit">Criar conta</button>
-        <p class="text-center text-muted mt-3 mb-0">Ja tem conta? <a href="{{ url_for('login') }}">Entrar</a></p>
+        <p class="text-center text-muted mt-3 mb-0">Ja tem conta? <a href="{{ url_for('auth.login') }}">Entrar</a></p>
     </form>
 </section>
 {% endblock %}
@@ -68,10 +68,10 @@ tipo.addEventListener('change', () => {
 
 document.getElementById('registroForm').addEventListener('submit', async function(event) {
     event.preventDefault();
-    const response = await fetch('{{ url_for("registro") }}', { method: 'POST', body: new FormData(this) });
+    const response = await fetch('{{ url_for("auth.registro") }}', { method: 'POST', body: new FormData(this) });
     const data = await response.json();
     if (response.ok) {
-        window.location.href = tipo.value === 'professor' ? '{{ url_for("dashboard_professor") }}' : '{{ url_for("dashboard_aluno") }}';
+        window.location.href = tipo.value === 'professor' ? '{{ url_for("professor.dashboard_professor") }}' : '{{ url_for("aluno.dashboard_aluno") }}';
     } else {
         showNotification(data.erro || 'Erro ao registrar.', 'danger');
     }

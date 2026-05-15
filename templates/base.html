@@ -12,7 +12,7 @@
     <div class="nl-shell">
         <nav class="nl-nav" aria-label="Navegacao principal">
             <div class="nl-nav-inner">
-                <a class="nl-brand" href="{{ url_for('index') }}">
+                <a class="nl-brand" href="{{ url_for('main.index') }}">
                     <span class="nl-brand-mark">NL</span>
                     <span>NeuroLearn</span>
                     <span class="nl-brand-tag">Open Source</span>
@@ -21,22 +21,22 @@
                 <div class="nl-navlinks">
                     {% if session.usuario_id %}
                         {% if session.tipo == 'professor' %}
-                            <a class="nl-navlink" href="{{ url_for('dashboard_professor') }}">Painel</a>
-                            <a class="nl-navlink" href="{{ url_for('painel_professor') }}">Perfis</a>
-                            <a class="nl-navlink" href="{{ url_for('listar_alunos') }}">Alunos</a>
-                            <a class="nl-navlink" href="{{ url_for('criar_atividade') }}">Nova atividade</a>
+                            <a class="nl-navlink" href="{{ url_for('professor.dashboard_professor') }}">Painel</a>
+                            <a class="nl-navlink" href="{{ url_for('professor.painel_professor') }}">Perfis</a>
+                            <a class="nl-navlink" href="{{ url_for('professor.listar_alunos') }}">Alunos</a>
+                            <a class="nl-navlink" href="{{ url_for('professor.criar_atividade') }}">Nova atividade</a>
                         {% else %}
-                            <a class="nl-navlink" href="{{ url_for('dashboard_aluno') }}">Inicio</a>
-                            <a class="nl-navlink" href="{{ url_for('questionario_neurolearn') }}">Questionario</a>
-                            <a class="nl-navlink" href="{{ url_for('configuracoes_acessibilidade') }}">Acessibilidade</a>
+                            <a class="nl-navlink" href="{{ url_for('aluno.dashboard_aluno') }}">Inicio</a>
+                            <a class="nl-navlink" href="{{ url_for('aluno.questionario_neurolearn') }}">Questionario</a>
+                            <a class="nl-navlink" href="{{ url_for('aluno.configuracoes_acessibilidade') }}">Acessibilidade</a>
                         {% endif %}
                         <button class="btn btn-outline-secondary btn-sm" type="button" onclick="toggleDarkMode()" id="darkModeToggle" aria-label="Alternar tema">
                             <i class="fas fa-moon" id="darkModeIcon" aria-hidden="true"></i>
                         </button>
-                        <a class="nl-navlink" href="{{ url_for('logout') }}">Sair</a>
+                        <a class="nl-navlink" href="{{ url_for('auth.logout') }}">Sair</a>
                     {% else %}
-                        <a class="nl-navlink" href="{{ url_for('login') }}">Entrar</a>
-                        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('registro') }}">Solicitar acesso</a>
+                        <a class="nl-navlink" href="{{ url_for('auth.login') }}">Entrar</a>
+                        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('auth.registro') }}">Solicitar acesso</a>
                     {% endif %}
                 </div>
             </div>

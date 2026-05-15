@@ -11,7 +11,7 @@
             <h1 class="mb-3">Seu espaco de estudo.</h1>
             <p class="nl-lead mb-0">Responda atividades e questionarios com calma. As hipoteses completas ficam visiveis apenas para o educador responsavel.</p>
         </div>
-        <a href="{{ url_for('questionario_neurolearn') }}" class="btn btn-primary btn-lg">Abrir questionario</a>
+        <a href="{{ url_for('aluno.questionario_neurolearn') }}" class="btn btn-primary btn-lg">Abrir questionario</a>
     </div>
 </section>
 
@@ -60,7 +60,7 @@
                     </div>
                     <div class="text-muted small mt-1">{{ atividade.descricao[:120] }}{% if atividade.descricao|length > 120 %}...{% endif %}</div>
                 </div>
-                <a href="{{ url_for('responder_atividade', atividade_id=atividade.id) }}" class="btn btn-primary btn-sm">Comecar</a>
+                <a href="{{ url_for('aluno.responder_atividade', atividade_id=atividade.id) }}" class="btn btn-primary btn-sm">Comecar</a>
             </div>
             {% endfor %}
         {% else %}

@@ -44,8 +44,8 @@
         <span class="nl-pill {% if aluno.questionario_completo %}nl-pill-sage{% else %}nl-pill-ochre{% endif %}">{{ 'concluido' if aluno.questionario_completo else 'pendente' }}</span>
         <span class="nl-pill {% if aluno.perfil_gerado %}nl-pill-sage{% else %}nl-pill-ochre{% endif %}">{{ 'gerado' if aluno.perfil_gerado else 'aguardando' }}</span>
         <span class="d-flex gap-2">
-            <a class="btn btn-outline-primary btn-sm" href="{{ url_for('perfil_aluno_simples', aluno_id=aluno.id) }}">Resumo</a>
-            <a class="btn btn-primary btn-sm" href="{{ url_for('visualizar_perfil', aluno_id=aluno.id) }}">Perfil</a>
+            <a class="btn btn-outline-primary btn-sm" href="{{ url_for('relatorios.perfil_aluno_simples', aluno_id=aluno.id) }}">Resumo</a>
+            <a class="btn btn-primary btn-sm" href="{{ url_for('relatorios.visualizar_perfil', aluno_id=aluno.id) }}">Perfil</a>
         </span>
     </div>
     {% else %}

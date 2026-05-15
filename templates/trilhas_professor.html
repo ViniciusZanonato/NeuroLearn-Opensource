@@ -11,7 +11,7 @@
             <h1 class="mb-2">Trilhas de aprendizagem.</h1>
             <p class="nl-lead mb-0">Organize conteudos e rotas de estudo para perfis de aprendizagem diferentes.</p>
         </div>
-        <a class="btn btn-primary" href="{{ url_for('criar_trilha') }}">Nova trilha</a>
+        <a class="btn btn-primary" href="{{ url_for('professor.criar_trilha') }}">Nova trilha</a>
     </div>
 </section>
 
@@ -36,7 +36,7 @@
         <div class="nl-panel">
             <h3>Nenhuma trilha criada.</h3>
             <p class="text-muted">Crie uma trilha para recomendar estudos por perfil.</p>
-            <a class="btn btn-primary" href="{{ url_for('criar_trilha') }}">Criar primeira trilha</a>
+            <a class="btn btn-primary" href="{{ url_for('professor.criar_trilha') }}">Criar primeira trilha</a>
         </div>
     {% endif %}
 </section>

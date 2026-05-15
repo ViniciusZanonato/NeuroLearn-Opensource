@@ -14,8 +14,8 @@
             O NeuroLearn ajuda educadores a observar sinais, organizar evidencias e transformar respostas de questionarios em estrategias pedagogicas claras.
         </p>
         <div class="d-flex flex-wrap gap-3 mb-5">
-            <a href="{{ url_for('registro') }}" class="btn btn-primary btn-lg">Solicitar acesso</a>
-            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">Entrar</a>
+            <a href="{{ url_for('auth.registro') }}" class="btn btn-primary btn-lg">Solicitar acesso</a>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-lg">Entrar</a>
         </div>
         <div class="nl-stat-row">
             <div class="nl-stat">
@@ -87,7 +87,7 @@
             <div class="nl-eyebrow mb-2">Como funciona</div>
             <h2 class="mb-0">Da observacao ao plano de acao.</h2>
         </div>
-        <a href="{{ url_for('registro') }}" class="btn btn-outline-primary">Comecar agora</a>
+        <a href="{{ url_for('auth.registro') }}" class="btn btn-outline-primary">Comecar agora</a>
     </div>
 
     <div class="nl-grid nl-grid-3">

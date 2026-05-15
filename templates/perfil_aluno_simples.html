@@ -30,9 +30,9 @@
     <aside class="nl-card p-4">
         <div class="nl-eyebrow">Acoes</div>
         <div class="d-grid gap-2 mt-3">
-            <a class="btn btn-primary" href="{{ url_for('visualizar_perfil', aluno_id=aluno.id) }}">Ver perfil completo</a>
-            <a class="btn btn-outline-primary" href="{{ url_for('ver_respostas_questionario', aluno_id=aluno.id) }}">Ver respostas</a>
-            <a class="btn btn-outline-primary" href="{{ url_for('relatorio_detalhado', aluno_id=aluno.id) }}">Relatorio detalhado</a>
+            <a class="btn btn-primary" href="{{ url_for('relatorios.visualizar_perfil', aluno_id=aluno.id) }}">Ver perfil completo</a>
+            <a class="btn btn-outline-primary" href="{{ url_for('relatorios.ver_respostas_questionario', aluno_id=aluno.id) }}">Ver respostas</a>
+            <a class="btn btn-outline-primary" href="{{ url_for('relatorios.relatorio_detalhado', aluno_id=aluno.id) }}">Relatorio detalhado</a>
         </div>
     </aside>
 </section>

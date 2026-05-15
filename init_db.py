@@ -1,4 +1,8 @@
-from app import app, db, Usuario, Aluno, Professor, QuestionarioNeuroLearn, PerfilAprendizagem, Atividade, RespostaAluno, AnaliseIA
+from app import create_app
+from app.extensions import db
+from app.models import Usuario, Aluno, Professor, QuestionarioNeuroLearn, PerfilAprendizagem, Atividade, RespostaAluno, AnaliseIA
+
+app = create_app()
 from werkzeug.security import generate_password_hash
 
 def init_database():

@@ -9,7 +9,11 @@
 import os
 import sys
 from datetime import datetime
-from app import app, db, Usuario, Aluno, Professor
+from app import create_app
+from app.extensions import db
+from app.models import Usuario, Aluno, Professor
+
+app = create_app()
 
 def exibir_info_acesso():
     """Exibe informações de acesso ao sistema"""

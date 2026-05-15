@@ -10,7 +10,7 @@
             <h1 class="mt-2">Cronograma de estudos.</h1>
             <p class="nl-lead mb-0">Blocos de estudo planejados com pausas e horarios preferidos.</p>
         </div>
-        <a class="btn btn-primary" href="{{ url_for('criar_cronograma') }}">Novo cronograma</a>
+        <a class="btn btn-primary" href="{{ url_for('aluno.criar_cronograma') }}">Novo cronograma</a>
     </div>
 </section>
 
@@ -31,7 +31,7 @@
         <div class="nl-panel">
             <h2>Nenhum cronograma ativo.</h2>
             <p class="text-muted">Crie uma rotina de estudos adaptada ao seu momento.</p>
-            <a class="btn btn-primary" href="{{ url_for('criar_cronograma') }}">Criar cronograma</a>
+            <a class="btn btn-primary" href="{{ url_for('aluno.criar_cronograma') }}">Criar cronograma</a>
         </div>
     {% endif %}
 </section>

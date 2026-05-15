@@ -48,7 +48,7 @@
             <button type="submit" class="btn btn-primary btn-lg w-100">Entrar</button>
         </form>
         <div class="nl-rule mt-4 pt-4">
-            <p class="mb-0">Ainda nao tem acesso? <a href="{{ url_for('registro') }}">Solicite uma conta</a>.</p>
+            <p class="mb-0">Ainda nao tem acesso? <a href="{{ url_for('auth.registro') }}">Solicite uma conta</a>.</p>
         </div>
     </div>
 </section>
@@ -64,7 +64,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     button.textContent = 'Entrando...';
 
     try {
-        const response = await fetch('{{ url_for("login") }}', {
+        const response = await fetch('{{ url_for("auth.login") }}', {
             method: 'POST',
             body: formData
         });
@@ -75,7 +75,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         }
 
         if (response.ok) {
-            window.location.href = response.url || '{{ url_for("dashboard_aluno") }}';
+            window.location.href = response.url || '{{ url_for("aluno.dashboard_aluno") }}';
         } else {
             const result = await response.json();
             showNotification(result.erro || 'Credenciais invalidas', 'danger');

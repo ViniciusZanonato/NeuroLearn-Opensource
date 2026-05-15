@@ -21,7 +21,7 @@
             <p class="text-muted">{{ trilha.descricao }}</p>
             <div class="d-flex justify-content-between align-items-center mt-4">
                 <span class="nl-eyebrow mb-0">{{ trilha.duracao_estimada }} min</span>
-                <a class="btn btn-primary btn-sm" href="{{ url_for('iniciar_trilha', trilha_id=trilha.id) }}">Iniciar</a>
+                <a class="btn btn-primary btn-sm" href="{{ url_for('aluno.iniciar_trilha', trilha_id=trilha.id) }}">Iniciar</a>
             </div>
         </article>
         {% endfor %}
@@ -45,7 +45,7 @@
             </div>
             <span class="nl-pill">{{ trilha.nivel_dificuldade }}</span>
             <span class="nl-eyebrow mb-0">{{ trilha.duracao_estimada }} min</span>
-            <a class="btn btn-outline-primary btn-sm" href="{{ url_for('iniciar_trilha', trilha_id=trilha.id) }}">Abrir</a>
+            <a class="btn btn-outline-primary btn-sm" href="{{ url_for('aluno.iniciar_trilha', trilha_id=trilha.id) }}">Abrir</a>
         </div>
         {% endfor %}
     {% else %}

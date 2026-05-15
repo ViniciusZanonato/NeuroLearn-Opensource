@@ -23,7 +23,7 @@
         <span>{{ aluno.serie_ano or '-' }}</span>
         <span class="nl-pill {% if aluno.questionario_completo %}nl-pill-sage{% else %}nl-pill-ochre{% endif %}">{{ 'concluido' if aluno.questionario_completo else 'pendente' }}</span>
         <span class="nl-pill {% if aluno.perfil_gerado %}nl-pill-sage{% else %}nl-pill-ochre{% endif %}">{{ 'gerado' if aluno.perfil_gerado else 'aguardando' }}</span>
-        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('relatorio_comportamento', aluno_id=aluno.id) }}">Comportamento</a>
+        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('relatorios.relatorio_comportamento', aluno_id=aluno.id) }}">Comportamento</a>
     </div>
     {% else %}
     <div class="nl-panel"><h2>Nenhum aluno cadastrado.</h2></div>

@@ -13,10 +13,10 @@
 
         <div>
             <div class="nl-eyebrow mb-2">Painel</div>
-            <a class="nl-side-link active" href="{{ url_for('dashboard_professor') }}"><i class="fas fa-border-all"></i> Visao geral</a>
-            <a class="nl-side-link" href="{{ url_for('listar_alunos') }}"><i class="fas fa-user"></i> Alunos</a>
-            <a class="nl-side-link" href="{{ url_for('criar_atividade') }}"><i class="fas fa-pencil-alt"></i> Atividades</a>
-            <a class="nl-side-link" href="{{ url_for('painel_professor') }}"><i class="fas fa-book-open"></i> Relatorios</a>
+            <a class="nl-side-link active" href="{{ url_for('professor.dashboard_professor') }}"><i class="fas fa-border-all"></i> Visao geral</a>
+            <a class="nl-side-link" href="{{ url_for('professor.listar_alunos') }}"><i class="fas fa-user"></i> Alunos</a>
+            <a class="nl-side-link" href="{{ url_for('professor.criar_atividade') }}"><i class="fas fa-pencil-alt"></i> Atividades</a>
+            <a class="nl-side-link" href="{{ url_for('professor.painel_professor') }}"><i class="fas fa-book-open"></i> Relatorios</a>
         </div>
 
         <div>
@@ -47,7 +47,7 @@
                     <i class="fas fa-search"></i>
                     <input type="search" placeholder="Buscar aluno, atividade...">
                 </div>
-                <a href="{{ url_for('criar_atividade') }}" class="btn btn-primary btn-sm">Nova avaliacao</a>
+                <a href="{{ url_for('professor.criar_atividade') }}" class="btn btn-primary btn-sm">Nova avaliacao</a>
             </div>
         </div>
 
@@ -58,8 +58,8 @@
                     Voce tem <span style="color: var(--ochre);">perfis novos</span> e <span style="color: var(--clay);">alertas</span> para revisar nesta semana.
                 </h1>
                 <div class="d-flex flex-wrap gap-2 mt-4">
-                    <a href="{{ url_for('painel_professor') }}" class="btn btn-primary btn-sm">Revisar perfis</a>
-                    <a href="{{ url_for('listar_alunos') }}" class="btn btn-outline-primary btn-sm">Ver alunos</a>
+                    <a href="{{ url_for('professor.painel_professor') }}" class="btn btn-primary btn-sm">Revisar perfis</a>
+                    <a href="{{ url_for('professor.listar_alunos') }}" class="btn btn-outline-primary btn-sm">Ver alunos</a>
                 </div>
             </div>
             <div class="nl-stat-row" style="grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 0; border-bottom: 0; border-right: 0;">
@@ -85,7 +85,7 @@
                         <div class="nl-eyebrow">§ 01</div>
                         <h2 class="mb-0">Atividades recentes</h2>
                     </div>
-                    <a href="{{ url_for('criar_atividade') }}" class="btn btn-outline-primary btn-sm">Nova atividade</a>
+                    <a href="{{ url_for('professor.criar_atividade') }}" class="btn btn-outline-primary btn-sm">Nova atividade</a>
                 </div>
 
                 <div class="nl-data-header" style="grid-template-columns: 2fr 1fr 1fr 1fr 42px;">
@@ -110,7 +110,7 @@
                     <div class="nl-card p-4 mt-3">
                         <h3>Nenhuma atividade criada.</h3>
                         <p class="text-muted">Crie a primeira avaliacao para comecar a coletar evidencias dos alunos.</p>
-                        <a href="{{ url_for('criar_atividade') }}" class="btn btn-primary">Criar primeira atividade</a>
+                        <a href="{{ url_for('professor.criar_atividade') }}" class="btn btn-primary">Criar primeira atividade</a>
                     </div>
                 {% endif %}
             </div>

@@ -10,7 +10,7 @@
         <h1 class="mb-0">Alunos.</h1>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-primary btn-sm" type="button" onclick="exportarTabela()">Exportar CSV</button>
-            <a class="btn btn-primary btn-sm" href="{{ url_for('registro') }}">Convidar aluno</a>
+            <a class="btn btn-primary btn-sm" href="{{ url_for('auth.registro') }}">Convidar aluno</a>
         </div>
     </div>
 
@@ -64,10 +64,10 @@
                     {% endif %}
                 </span>
                 <span class="d-flex gap-2">
-                    <a href="{{ url_for('relatorio_aluno', aluno_id=aluno.id) }}" class="btn btn-outline-primary btn-sm" title="Relatorio">
+                    <a href="{{ url_for('relatorios.relatorio_aluno', aluno_id=aluno.id) }}" class="btn btn-outline-primary btn-sm" title="Relatorio">
                         <i class="fas fa-chart-line" aria-hidden="true"></i>
                     </a>
-                    <a href="{{ url_for('perfil_aluno_simples', aluno_id=aluno.id) }}" class="btn btn-outline-primary btn-sm" title="Perfil">
+                    <a href="{{ url_for('relatorios.perfil_aluno_simples', aluno_id=aluno.id) }}" class="btn btn-outline-primary btn-sm" title="Perfil">
                         <i class="fas fa-user" aria-hidden="true"></i>
                     </a>
                     <button class="btn btn-outline-primary btn-sm" onclick="enviarMensagem({{ aluno.id }})" title="Mensagem">
